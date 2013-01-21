@@ -16,7 +16,6 @@ Unit = function(owner) {
     this.currentCooldown = 0
     this.speed = 0.02 //defaul 0.02
     this.selected = false
-    this.baseRemove = this.remove
     this.hlSelect = new HLSelect() //the actor hilighter for this unit
     this.hlEnemy = new HLEnemy()  // the actor to hilight this enemy as a target
 }
@@ -274,7 +273,7 @@ Unit.prototype.remove = function() {
         this.unselect()
     }
     this.owner.unitCount--
-    this.baseRemove()
+    Unit.superClass.remove.call(this)
 }
 
 /**
@@ -316,7 +315,7 @@ Paper.prototype.setColor = function(color) {
     this.uniform.color.value = ACE3.Utils.getVec3Color(color)
 }
 Paper.prototype.run = function() {
-    Paper.superClass.run.call(this)
+    Paper.superClass.run.call(this) //executes the Unit run method on this object
     this.uniform.time.value = clock.getElapsedTime()
 }
 

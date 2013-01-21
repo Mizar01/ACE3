@@ -58,7 +58,7 @@ function game_init_map(map) {
     gameManager.registerActor(terrain)
   
     //Player init
-    p1 = new Player("mizar", ACE3.Constants.CONTROLLER_HUMAN)
+    p1 = new Player("mizar", ACE3.Constants.CONTROLLER_CPU)
     p1.color = 0x0000ff
     p2 = new Player ("cpu", ACE3.Constants.CONTROLLER_CPU)
     p2.color = 0xff0000
@@ -66,7 +66,7 @@ function game_init_map(map) {
     players.push(p2)
     
     //build random units for p and p2
-    var totalUnits = 6
+    var totalUnits = 12
     var posy = terrain.obj.position.y + 1
     var tsx = terrain.totalSizeX
     var tsz = terrain.totalSizeZ
@@ -101,10 +101,10 @@ function game_init_map(map) {
     //gameManager.registerLogic(new ControlPlayerVictoryLogic())
     gameManager.registerLogic(new CameraLogic())
 
-    nu2 = new Unit2(0,0)
-    nu2.testAttr = "cad"
-    nu2.setColor(0xffffff)
-    gameManager.registerActor(nu2)
+    // nu2 = new Unit2(0,0)
+    // nu2.testAttr = "cad"
+    // nu2.setColor(0xffffff)
+    // gameManager.registerActor(nu2)
 
 
     // for (var i = 0; i <= 1000; i++) {

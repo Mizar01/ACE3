@@ -76,8 +76,6 @@ HLBase.prototype.remove = function() {
     this.alive = false
 }
 HLBase.prototype.run = function() {
-    //console.log(this.getType())
-    //this.obj.rotation.y += 0.01
     this.uniform.cycles.value += 10
 }
 

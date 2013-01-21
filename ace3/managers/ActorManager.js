@@ -1,6 +1,6 @@
 ACE3.ActorManager = function(scene) {
     this.scene = scene
-    this.actors = new Array() // incremental array (normal)
+    this.actors = {} // incremental array (normal)
     this.logics = new Array() // array of logics for the whole actorManager
     
     this.paused = true
@@ -13,11 +13,11 @@ ACE3.ActorManager.prototype = {
     registerActor: function(actor) {
         actor.manager = this
         actor.init()
-        this.actors.push(actor)
+        this.actors["" + actor.getId()] = actor 
     },
 
     unregisterActor: function(actor) {
-        var id = actor.getId()
+        var id = "" + actor.getId()
         a = this.actors[id]
         a.remove()
         a.alive = false // can be used if referenced from some other objects to control if it's alive.
@@ -33,7 +33,7 @@ ACE3.ActorManager.prototype = {
         for (var i in this.logics) {
             delete this.logics[i]
         }
-        this.actors =  new Array()
+        this.actors =  {}
         this.logics = new Array()
         this.paused = true       
     },
@@ -54,7 +54,7 @@ ACE3.ActorManager.prototype = {
         for (var id in this.actors) {
             var a = this.actors[id]
             if (a.alive) {
-                a.run()
+                a.__run()
             }else {
                 this.unregisterActor(a)
             }

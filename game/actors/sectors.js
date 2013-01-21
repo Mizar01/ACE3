@@ -202,7 +202,7 @@ SpawnSector = function(posx, posy, sizex, sizey) {
     this.addActor(this.spawner)
     this.spawner.sector = this
 }
-SpawnSector.extends(Sector, "SpanwSector")
+SpawnSector.extends(Sector, "SpawnSector")
 
 
 // 
@@ -379,9 +379,6 @@ Tower.prototype.setColor = function(color) {
         this.obj.material.color = new THREE.Color(color)
     }
 Tower.prototype.run = function() {
-
-    //this.uniform.time.value = clock.getElapsedTime()
-
     this.refreshCooldown()
     var te = this.targetEnemy
     if (te != null && this.XZDistanceTo(te) < this.range && te.alive) {

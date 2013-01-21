@@ -36,13 +36,25 @@ ACE3.Actor.prototype = {
     setForRemoval: function() {
         this.alive = false
     },
+
+    /**
+    * I thought about it many times. This method is the real running method 
+    * called by the manager. This force every actor to have a basic behaviour 
+    * stated once and for all. Furthermore implementing run function will not
+    * need this logic, so the developer can concentrate on the single actor logic.
+    */
+    __run: function() {
+        if (this.alive) {
+            this.run()
+            for (id in this.actorChildren) {
+                this.actorChildren[id].__run()
+            }
+        }      
+    },
     
 
     run: function() {
-        //for (var i = 0; i < this.actorChildren.length; i++) {
-        for (id in this.actorChildren) {
-            this.actorChildren[id].run()
-        }
+
     },  
 
     addActor: function(actor) {
