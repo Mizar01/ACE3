@@ -41,13 +41,12 @@ ACE3.Actor.prototype = {
     run: function() {
         //for (var i = 0; i < this.actorChildren.length; i++) {
         for (id in this.actorChildren) {
-            this.actorChildren[id]._run()
+            this.actorChildren[id].run()
         }
     },  
 
     addActor: function(actor) {
-        console.log(actor)
-        TEST = this
+        //console.log("superClass.addActor called!")
         this.actorChildren["" + actor.getId()] = actor
     },
 

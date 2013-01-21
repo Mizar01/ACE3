@@ -1,7 +1,7 @@
 
 
 function MultiSelectTarget() {
-	this.base = ACE3Logic
+	this.base = ACE3.Logic
 	this.base()
     this.selStart = null
     this.selEnd = null
@@ -92,13 +92,13 @@ function MultiSelectTarget() {
 }
 
 function AutomaticGameSingleAI() {
-	this.base = ACE3Logic
+	this.base = ACE3.Logic
 	this.base()
 	this.run = function() {}
 }
 
 function ESCPauseGameLogic() {
-	this.base = ACE3Logic
+	this.base = ACE3.Logic
 	this.base()
 	this.run = function() {
         if (ace3.eventManager.released(ace3.eventManager.keyCodes.escape)) {
@@ -108,7 +108,7 @@ function ESCPauseGameLogic() {
 }
 
 function ControlPlayerVictoryLogic() {
-	this.base = ACE3Logic
+	this.base = ACE3.Logic
 	this.base()	
 	this.run = function() {	
         for (var ip in players) {
@@ -125,7 +125,7 @@ function ControlPlayerVictoryLogic() {
 * Basicly modify the properties of the camera on some conditions.
 */
 function CameraLogic() {
-    this.base = ACE3Logic
+    this.base = ACE3.Logic
     this.base()
     this.minHeight = 5
     this.run = function() {

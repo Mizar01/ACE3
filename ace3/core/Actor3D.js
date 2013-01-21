@@ -3,9 +3,6 @@ ACE3.Actor3D = function() {
     this.obj = null
     this.picked = false
     this.pickable = false // true if the object has been added to pickable objects.
-    this.actorChildren = new Array() // associative array of children ace3actors (three obj "id" -> actor)
-                                     // beware of the quoting when assiging. The associative key is always a string.
-
 }
 ACE3.Actor3D.extends(ACE3.Actor, "ACE3.Actor3D")
 
@@ -46,7 +43,10 @@ ACE3.Actor3D.prototype.removeFromScene = function () {
 }
 
 ACE3.Actor3D.prototype.addActor = function(actor) {
-    this.superClass.addActor.call(this, actor)
+    //Nothing is more wrong than this. 
+    // this.superClass = Actor if the this object is not an extension of Actor3D
+    // if 'this' is a successor of Actor3D this leads to infinite recursion (this.superClass is 'Actor3D' forever)
+    ACE3.Actor3D.superClass.addActor.call(this, actor)
     this.obj.add(actor.obj)
 }
 
@@ -57,7 +57,7 @@ ACE3.Actor3D.prototype.addActor = function(actor) {
 */
 ACE3.Actor3D.prototype.removeActor = function(actor) {
     this.obj.remove(actor.obj)
-    this.superClass.removeActor.call(this, actor)
+    ACE3.Actor3D.superClass.removeActor.call(this, actor)
 }
 
 /**

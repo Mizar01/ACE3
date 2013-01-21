@@ -13,7 +13,12 @@
 Function.prototype.extends = function(baseClass, typeName) {
     this.prototype = Object.create(baseClass.prototype)
     this.prototype.constructor = this
-    this.prototype.superClass = baseClass.prototype
+
+    //The superClass must be used in a static way
+    // example: ACE3.Object.superClass.method.call(instance,params)  
+    // DON'T USE superClass with 'this' identifier.
+    this.superClass = baseClass.prototype //(USE WITH CAUTION : VERY DANGEROUS)
+
     this.prototype.type = typeName
 }
 

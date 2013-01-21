@@ -124,7 +124,7 @@ HLPoint = function() {
 }
 HLPoint.extends(HLBase, "HLPoint")  
 HLPoint.prototype.select = function(vec2) {
-    this.superClass.select.call(this, terrain)
+    HLPoint.superClass.select.call(this, terrain)
     this.obj.position.set(vec2.x, terrain.obj.position.y + 1, vec2.y)
 }
 
@@ -136,7 +136,7 @@ HLSector = function() {
 }
 HLSector.extends(HLBase, "HLSector")
 HLSector.prototype.select = function(actor) {
-    this.superClass.select.call(this, actor.innerActor)
+    HLSector.superClass.select.call(this, actor.innerActor)
     if (actor.getType() == 'SpawnSector') {
         this.obj.rotation.x = 0
         this.obj.position.z = 0.1

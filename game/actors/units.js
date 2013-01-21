@@ -316,7 +316,7 @@ Paper.prototype.setColor = function(color) {
     this.uniform.color.value = ACE3.Utils.getVec3Color(color)
 }
 Paper.prototype.run = function() {
-    this.superClass.run.call(this)
+    Paper.superClass.run.call(this)
     this.uniform.time.value = clock.getElapsedTime()
 }
 
@@ -357,7 +357,7 @@ Scissors.prototype.setColor = function(color) {
 }
 
 Scissors.prototype.run = function() {
-    this.superClass.run.call(this)
+    Scissors.superClass.run.call(this)
     var ty = THREE.Math.sign(Math.sin(clock.getElapsedTime())) * 0.001
     for (cid in this.legs) {
         this.legs[cid].translateY(ty)
@@ -380,6 +380,6 @@ Rock.prototype.setColor = function(color) {
     this.uniform.color.value = ACE3.Utils.getVec3Color(color)
 }
 Rock.prototype.run = function() {
-    this.superClass.run.call(this)
+    Rock.superClass.run.call(this)
     this.uniform.time.value = clock.getElapsedTime()
 }

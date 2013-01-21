@@ -59,6 +59,20 @@ Terrain.prototype.unselect = function() {
     this.hlPoint.unselect()
 }
 
+PickPlane = function(terrainActor) {
+    ACE3.Actor3D.call(this)
+    // this plane is in the same position (a little lower) of the terrain but it's a little greater
+    this.sx = terrainActor.totalSizeX + 5 
+    this.sz = terrainActor.totalSizeZ + 5
+    this.obj = ACE3.Builder.squareXZ(this.sx, this.sz, 0xff0000)
+    this.obj.material.transparent = true
+    this.obj.material.opacity = 0.0
+    this.setPickable()
+    this.obj.position.y = terrainActor.obj.position.y - 0.1
+}
+PickPlane.extends(ACE3.Actor3D, "PickPlane")
+
+
 
 /**
 * Note : posx e posz
@@ -183,8 +197,7 @@ FlagSector.extends(Sector, "FlagSector")
 
 SpawnSector = function(posx, posy, sizex, sizey) {
     Sector.call(this,posx, posy, sizex, sizey)
-    this.baseSetColor = this.setColor
-    this.spawner = new Spawner(sizex, sizey) //TODO
+    this.spawner = new Spawner(sizex, sizey)
     this.innerActor = this.spawner
     this.addActor(this.spawner)
     this.spawner.sector = this
