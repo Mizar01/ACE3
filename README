@@ -1,4 +1,11 @@
-RPSZ3D (webgl game project)
+ACE3 - Advanced Canvas Game Engine 3D
+
+This project is currently merged with RPSZ3D game project, so it's possible to use ACE3 engine and see it 
+directly within a game. Everything is in development, a work in progress, and actually I can't suggest it
+for any use. At this stage the code-refactoring is very frequent, and adopted solutions/theories are changed
+in a blink to improve performance or the workflow.
+
+NOTES FOR RPSZ3D/ACE3 BUGS
 
 NOTES FOR THE DEVELOPER:
 - Do not assign position or rotations to some value or vec3 when combined with other
@@ -34,30 +41,4 @@ TODO :
 * After some time I can't select some sectors (this.targetSector remains void)(due to unremoved actors standing in the way)
 - this.pickables.splice(pi) // TODO : debug this. - The selection is compromised.
 
-Notes on prototyping proposals.
-
-var OBJFather = function(name) {
-    this.name = name
-}
-OBJFather.prototype.setName = function(name) {
-    this.name = name
-}
-
-var OBJChild = function(name, x) {
-    OBJFather.call(this, name)
-    this.x = x
-}
-
-OBJChild.prototype = {
-    __proto__: Object.create(OBJFather.prototype),
-    setX: function(x) {
-        this.x = x
-    },
-}
-
-//Alternative :
-//OBJChild.prototype = Object.create(OBJFather.prototype)
-//OBJChild.prototype.setX = function(x) {
-//    this.x = x
-//} 
-  
+Notes on prototyping proposals.  
