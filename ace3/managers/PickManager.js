@@ -1,7 +1,7 @@
 
 ACE3.PickManager = function() {
     this.pickables = new Array() //DON'T REMOVE: It's useful during picking process. Array of three js objects
-    this.actors = new Array() //Associative array (three "id" obj -> actor)
+    this.actors = {} //Associative array (three "id" obj -> actor)
     this.pickedActor = null // store the Actor currently over the mouse
     this.intersectedObj = null
 }
@@ -19,15 +19,33 @@ ACE3.PickManager.prototype = {
     addActor: function(actor) {
         this.pickables.push(actor.obj)
         this.actors["" + actor.obj.id] = actor
+        // THE REST IS FOR LOGGING PURPOSES 
+        // if (actor.typeIn(['Rock', 'Paper', 'Scissors'])) {
+        //         console.log("Added player " + actor.owner.name +" type " + actor.getType() +" id " + actor.getId())
+        //     var s = ""
+        //     for (var i = 0 ; i< this.pickables.length; i++) {
+        //         s += this.pickables[i].id + " "
+        //     }
+        //     console.log(s)
+        // }
     },
     removeActor: function(actor) {
         for (var pi in this.pickables) {
             if (this.pickables[pi].id == actor.obj.id) {
-                this.pickables.splice(pi) // TODO : debug this.
+                this.pickables.splice(pi, 1)
                 break
             }
         }
         delete this.actors["" + actor.obj.id]
+        // THE REST IS FOR LOGGING PURPOSES
+        // if (actor.typeIn(['Rock', 'Paper', 'Scissors'])) {
+        //     console.log("Removed player " + actor.owner.name +" type " + actor.getType() +" id " + actor.getId())
+        //     var s = ""
+        //     for (var i = 0 ; i< this.pickables.length; i++) {
+        //         s += this.pickables[i].id + " "
+        //     }
+        //     console.log(s)
+        // }
     },
     
     // TODO : an old implementation makes the pickManager to run

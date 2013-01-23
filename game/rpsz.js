@@ -58,7 +58,7 @@ function game_init_map(map) {
     gameManager.registerActor(terrain)
   
     //Player init
-    p1 = new Player("mizar", ACE3.Constants.CONTROLLER_CPU)
+    p1 = new Player("mizar", ACE3.Constants.CONTROLLER_HUMAN)
     p1.color = 0x0000ff
     p2 = new Player ("cpu", ACE3.Constants.CONTROLLER_CPU)
     p2.color = 0xff0000

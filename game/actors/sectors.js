@@ -139,7 +139,7 @@ Sector.prototype.setOwner = function(player) {
     this.owner = player
     this.owner.sectorCount++
     this.setColor(player.color)
-    if (this.innerActor.setOwner != undefined) {
+    if (this.innerActor != undefined && this.innerActor.setOwner != undefined) {
         this.innerActor.setOwner(player)
     }
 }
@@ -148,7 +148,9 @@ Sector.prototype.setColor = function(color) {
     this.uniform.color.value = ACE3.Utils.getVec3Color(color)
     //this.obj.material.color = c
     //this.objChild1.material.color = c
-    this.innerActor.setColor(color)
+    if (this.innerActor != undefined) {
+        this.innerActor.setColor(color)
+    }
 }
 
 
@@ -189,9 +191,9 @@ TowerSector.prototype.setPosition = function(x, y, z) {
 
 FlagSector = function(posx, posy, sizex, sizey) {
     Sector.call(this,posx, posy, sizex, sizey)
-    this.flag = new Flag()
-    this.innerActor = this.flag
-    this.addActor(this.flag)
+    //this.flag = new Flag()
+    //this.innerActor = this.flag
+    //this.addActor(this.flag)
 }
 FlagSector.extends(Sector, "FlagSector")
 

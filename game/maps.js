@@ -163,6 +163,7 @@ function initMapObjects(terrainActor, mapProps) {
 				var s = new TowerSector(terrainActor, x, z, ssx, ssz)
 			}else {
 				var s = new FlagSector(x, z, ssx, ssz)
+				//continue
 			}
             terrainActor.addActor(s)
             px = terrainActor.startX + x * ssx
