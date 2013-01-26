@@ -29,9 +29,10 @@ ACE3.Utils = {
     getStandardUniform: function() {
             //Alternate mesh
         return {
-                time: { type: "f", value: 1.0 },
-                resolution: { type: "v2", value: new THREE.Vector2() },
-                color: { type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) },
+                time: { type: "f", value: 1.0 },  //useful for timing
+                resolution: { type: "v2", value: new THREE.Vector2() }, //mandatory for resolution
+                color: { type: "v3", value: new THREE.Vector3(1.0, 1.0, 1.0) }, //useful to send a color
+                cycles: { type: "f", value: 1.0 }, //useful for something else like iterations
             }
     },
     getStandardShaderMesh: function(uniform, vertexShader, fragmentShader, geometry) {

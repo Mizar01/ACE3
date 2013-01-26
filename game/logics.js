@@ -91,6 +91,102 @@ function MultiSelectTarget() {
 	}
 }
 
+/**
+* This is the same as MultiSelectTarget but does not pick flag sectors.
+* Furthermore it is allowed to select a MagnetSector position.
+*/ 
+function MultiSelectTarget_NoSectors() {
+    this.base = ACE3.Logic
+    this.base()
+    this.selStart = null
+    this.selEnd = null
+    this.unitSelector = new UnitSelector()
+    this.areaSelector = new AreaSelector() //Rectangle to attach to terrain to draw selection on screen
+    this.run = function() {
+        var uSel = this.unitSelector
+        var pm = ace3.pickManager
+        var singleSelect = false
+        var intObj = null
+        // Picking control
+        if (ace3.eventManager.mousePressed() && this.selStart == null) {
+            pm.pickActor()
+            var pu = pm.pickedActor
+            if (pu != null) {
+                intObj = pm.intersectedObj
+                this.selStart = new THREE.Vector2(intObj.point.x, intObj.point.z)
+                this.areaSelector.startSelection(this.selStart)
+            }
+        } 
+        if (ace3.eventManager.mousePressed() && this.selStart != null) {
+            pm.pickActor()
+            var pu = pm.pickedActor
+            if (pu != null) {
+                intObj = pm.intersectedObj
+                this.sel = new THREE.Vector2(intObj.point.x, intObj.point.z)
+                this.areaSelector.updateArea(this.selStart, this.sel)
+            }           
+            
+        }
+
+        // For the human player when a target is selected, it is the only one.
+        if (ace3.eventManager.mouseReleased()) { // 'x'
+            pm.pickActor()
+            var pu = pm.pickedActor
+            //console.log(pu)
+            if (pu != null && this.selStart != null) {
+                intObj = pm.intersectedObj
+                this.selEnd = new THREE.Vector2(intObj.point.x, intObj.point.z)
+                //console.log(this.selStart)
+                //console.log(this.selEnd)
+                if (this.selStart.distanceTo(this.selEnd) < 1) {
+                    singleSelect = true
+                }else {
+                    var changedSel = uSel.selectUnits(this.selStart, this.selEnd)
+                    // if (!changedSel) {
+                    //     singleSelect = true
+                    // }
+                }
+            }
+
+            if (singleSelect) {
+                if (pu != null && GameUtils.isUnit(pu)) {
+                    // If the selected unit is controlled by Human i will select the unit
+                    if (GameUtils.isHuman(pu)) {
+                        uSel.selectSingleUnit(pu)
+                    }else if (GameUtils.isCPU(pu)) {
+                        if (uSel.selectionActive()) {
+                            uSel.selectEnemyForUnits(pu)
+                        }
+                    }
+                }else if (pu != null && pu.getType() == 'PickPlane') {
+                    if (uSel.selectionActive()) {
+                        var interXZ = this.selEnd //a Vector2 element (x,y) (z ==> y)
+                        //console.log(interXZ)
+                        var sector = terrain.getSectorByXZCoords(interXZ.x, interXZ.y) //note: it's y because we are using a Vector2
+                        if (sector != null && GameUtils.isAnySector(sector)) {
+                            var sp = sector.obj.position
+                            //console.log(pupos.x + "," + interXZ.x + "," + pupos.z + "," + interXZ.z)
+                            if (Math.pow(sp.x - interXZ.x, 2) + Math.pow(sp.z - interXZ.y, 2) < 0.20
+                                && sector.getType() != 'FlagSector') {
+                                uSel.selectSectorForUnits(sector)
+                            }else {
+                                uSel.selectPointForUnits(interXZ)
+                            }
+                        }
+                    }
+                }
+            }
+
+            //in any case i'm resetting the multiselects
+            //console.log(this.selStart)
+            //console.log(this.selEnd)
+            this.areaSelector.endSelection()
+            this.selStart = null
+            this.selEnd = null
+        } // end of mouseReleased
+    }
+}
+
 function AutomaticGameSingleAI() {
 	this.base = ACE3.Logic
 	this.base()
@@ -158,3 +254,65 @@ function CameraLogic() {
 
     }
 }
+
+CameraDemoLogic = function() {
+    ACE3.Logic.call(this)
+    this.timeToChange = 10
+    this.lastTimeChange =  0
+    this.targetUnit = null
+}
+CameraDemoLogic.extends(ACE3.Logic, "CameraDemoLogic")
+
+CameraDemoLogic.prototype.run = function() {
+    var t = clock.getElapsedTime()
+
+    if (this.targetUnit == null || (t - this.lastTimeChange) > this.timeToChange) {
+        this.changeUnit()
+        this.lastTimeChange = t
+    }
+
+    // var em = ace3.eventManager
+    // var pm = ace3.pickManager
+    // if (em.mouseReleased()) {
+    //     pm.pickActor()
+    //     var a = pm.pickedActor
+    //     if (a != null) {
+    //         this.targetUnit = a
+    //     }
+    // }
+
+    if (this.targetUnit != null) {
+        ace3.camera.lookAt(this.targetUnit.obj.position)
+    }
+
+}
+
+CameraDemoLogic.prototype.changeUnit = function() {
+    //choose a random unit to look at
+    //camera_reset_position()
+    //ace3.camera.cameraObj.rotation.x = 0
+    var ga = gameManager.actors
+    var uArr = new Array()
+    for (uid in ga) {
+        var u = ga[uid]
+        if (GameUtils.isUnit(u)) {
+            uArr.push(u)
+        }
+    }
+    if (uArr.length > 0) {
+        var ri = THREE.Math.randInt(0, uArr.length - 1)
+        this.targetUnit = uArr[ri]
+        //console.log(this.targetUnit.obj.position)
+        this.findNewPlace()
+    }
+}
+
+CameraDemoLogic.prototype.findNewPlace = function() {
+    var distance = 5 + THREE.Math.randInt(0, 15)
+    var angle = THREE.Math.randFloat(0, 6.28)
+    var y = 6 + THREE.Math.randInt(0, 5)
+    var x = this.targetUnit.obj.position.x + distance * Math.cos(angle)
+    var z = this.targetUnit.obj.position.z + distance * Math.sin(angle) 
+    ace3.camera.pivot.position.set(x, y, z)
+}
+

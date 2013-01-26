@@ -191,6 +191,11 @@ TowerSector.prototype.setPosition = function(x, y, z) {
 
 FlagSector = function(posx, posy, sizex, sizey) {
     Sector.call(this,posx, posy, sizex, sizey)
+    //overwrite properties of the default sector
+    this.uniform = ACE3.Utils.getStandardUniform()
+    var g = new THREE.PlaneGeometry(sizex, sizey)
+    this.obj = ACE3.Utils.getStandardShaderMesh(this.uniform, "vertexShaderGeneric", "fragmentShader_NewFlagSector", g)
+    this.obj.rotation.x = -Math.PI/2
     //this.flag = new Flag()
     //this.innerActor = this.flag
     //this.addActor(this.flag)

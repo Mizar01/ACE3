@@ -135,8 +135,9 @@ HLSector = function() {
 HLSector.extends(HLBase, "HLSector")
 HLSector.prototype.select = function(actor) {
     //select the centered innerActor if exists
-    if (this.innerActor == undefined) {
-        return 
+    if (actor.innerActor == undefined) {
+        HLSector.superClass.select.call(this, actor)
+        return
     }
     
     HLSector.superClass.select.call(this, actor.innerActor)

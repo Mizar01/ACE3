@@ -1,19 +1,23 @@
 ACE3.Camera = function (container) {
     this.pivot = new THREE.Object3D() //is going to be very useful for most uses of camera moving and rotations
     this.cameraObj = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 1, 4000)
-    this.pivot.add(this.cameraObj)
+    //this.pivot.add(this.cameraObj)
+    this.cameraObj.position = this.pivot.position // AVOID TO MAKE CameraObj as child of Pivot, 
+                                                  // they only point to the same postion vector.
+    //this.pivot = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 1, 4000)
+    //this.cameraObj = this.pivot
     this.moveUp = false
     this.moveDown = false
     this.moveForward = false
     this.moveBackward = false
     this.moveLeft = false
     this.moveRight = false
-    this.speed = 5
+    this.speed = 2
 }
 
 ACE3.Camera.prototype = {
-    constructor: ACE3.Actor,
-    type: "ACE3.Actor",   
+    constructor: ACE3.Camera,
+    type: "ACE3.Camera",   
     run: function() {
         this.control()
         var p = this.pivot.position
@@ -37,7 +41,11 @@ ACE3.Camera.prototype = {
         this.moveBackward = em.pressed(kc.arrow_down)
         this.moveRight = em.pressed(kc.arrow_right)
         this.moveLeft = em.pressed(kc.arrow_left)
-    },    
+    }, 
+
+    lookAt: function(vec3) {
+        this.cameraObj.lookAt(vec3)
+    },  
     
     
     

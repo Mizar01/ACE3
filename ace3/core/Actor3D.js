@@ -80,4 +80,8 @@ ACE3.Actor3D.prototype.XZDistanceTo = function (targetActor) {
     var pos = new THREE.Vector3( targetPos.x, this.obj.position.y, targetPos.z)
     return this.obj.position.distanceTo(pos)
 }
+
+ACE3.Actor3D.prototype.setColor = function(color) {
+    this.obj.material.color = new THREE.Color(color)
+}
     

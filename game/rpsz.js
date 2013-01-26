@@ -43,13 +43,15 @@ function game_init() {
 }
 
 function camera_reset_position() {
+    ace3.camera.cameraObj.rotation.y = 0
+    ace3.camera.cameraObj.rotation.z = 0
     ace3.camera.cameraObj.rotation.x = - Math.PI/3
-    ace3.camera.pivot.position.z = 16
-    ace3.camera.pivot.position.y = 28
+    ace3.camera.pivot.position.set(0, 28, 16)
     ace3.camera.speed = 0.1
 }
 
-function game_init_map(map) {
+function game_init_map(map, demoMode) {
+    var demoMode = demoMode || false
     var mapProps = loadMap(map)
     //initMapObjects(mapProps)
     // Build the terrain
@@ -58,7 +60,11 @@ function game_init_map(map) {
     gameManager.registerActor(terrain)
   
     //Player init
-    p1 = new Player("mizar", ACE3.Constants.CONTROLLER_HUMAN)
+    if (!demoMode) {
+        p1 = new Player("mizar", ACE3.Constants.CONTROLLER_HUMAN)
+    }else {
+        p1 = new Player("mizar", ACE3.Constants.CONTROLLER_CPU)
+    }
     p1.color = 0x0000ff
     p2 = new Player ("cpu", ACE3.Constants.CONTROLLER_CPU)
     p2.color = 0xff0000
@@ -66,7 +72,11 @@ function game_init_map(map) {
     players.push(p2)
     
     //build random units for p and p2
-    var totalUnits = 12
+    var totalUnits = 4
+    if (demoMode) {
+        totalUnits = 10
+    }
+
     var posy = terrain.obj.position.y + 1
     var tsx = terrain.totalSizeX
     var tsz = terrain.totalSizeZ
@@ -86,20 +96,28 @@ function game_init_map(map) {
         if (type == 0) obj = new Paper()
         else if (type == 1) obj = new Rock()
         else obj = new Scissors()
-        if (obj.getType() == "Scissors" && testSciss == null) {
-            //testSciss = obj
-        }
+        // if (obj.getType() == "Scissors" && testSciss == null) {
+        //     //testSciss = obj
+        // }
         cp.addUnit(obj, rx, posy, rz)
         //make every unit pickable
-        obj.setPickable()
+        if (!demoMode) {
+            obj.setPickable()
+        }
     }
     
 
 
-    gameManager.registerLogic(new MultiSelectTarget())
+    if (!demoMode) {
+        gameManager.registerLogic(new CameraLogic())
+        gameManager.registerLogic(new MultiSelectTarget_NoSectors())
+        //gameManager.registerLogic(new ControlPlayerVictoryLogic())
+    }else {
+        gameManager.registerLogic(new CameraDemoLogic())
+    }
+
+
     gameManager.registerLogic(new ESCPauseGameLogic())
-    //gameManager.registerLogic(new ControlPlayerVictoryLogic())
-    gameManager.registerLogic(new CameraLogic())
 
     // nu2 = new Unit2(0,0)
     // nu2.testAttr = "cad"
@@ -142,16 +160,22 @@ function game_choose() {
     chooseMapMenuManager.play()
 }
 
-function game_play(map) {
+function game_play(map, demoMode) {
+    var demoMode = demoMode || false;
     if (map != undefined) {
         game_destroy_map()
-        game_init_map(map)
+        game_init_map(map, demoMode)
     }
     menuManager.pause()
     chooseMapMenuManager.pause()
     gameManager.play()
     game_started = true
 }
+
+function game_demo() {
+    game_play("Flatlandia", true)
+}
+
 
 function game_pause() {
     gameManager.pause()
@@ -185,6 +209,8 @@ function menu_define() {
     box.addStyle(standardBoxStyle);
     var playButton = new ACE3.HTMLButton("NEW GAME", butX, box.y + 40, butW, 20, "game_choose()", zIndex + 1, fgColor, bgColor)
     playButton.addStyle(standardButtonStyle)
+    var demoButton = new ACE3.HTMLButton("DEMO", butX, box.y + 80, butW, 20, "game_demo()", zIndex + 1, fgColor, bgColor)
+    demoButton.addStyle(standardButtonStyle)
     var tutorialButton = new ACE3.HTMLButton("Tutorial(TODO)", butX, box.y + 120, butW, 20, "", zIndex + 1, fgColor, bgColor)
     tutorialButton.addStyle(standardButtonStyle)
     var optionButton = new ACE3.HTMLButton("OPTIONS(TODO)", butX, box.y + 160, butW, 20, "", zIndex + 1, fgColor, bgColor)
@@ -195,6 +221,7 @@ function menu_define() {
     resumeButton.addStyle(standardButtonStyle)
     menuManager.registerActor(box)
     menuManager.registerActor(playButton)
+    menuManager.registerActor(demoButton)
     menuManager.registerActor(optionButton)
     menuManager.registerActor(tutorialButton)
     menuManager.registerActor(aboutButton) 
@@ -236,6 +263,12 @@ function menu_define() {
 
 
 GameUtils = {
+    /**
+    * For many purposes i must control this very often in my code.
+    */
+    isValidActor: function(actor) {
+        return actor != null && actor.alive
+    },
     isUnit: function(actor) {
         return actor.typeIn(['Rock', 'Scissors', 'Paper'])    
     },
@@ -245,8 +278,17 @@ GameUtils = {
     isCPU: function(unit) {
         return (unit.owner != null && unit.owner.controller == ACE3.Constants.CONTROLLER_CPU)        
     },
+    /**
+    * A valid and selectable sector.
+    */
     isValidSector: function(sector) {
-        return sector.typeIn(['FlagSector', 'TowerSector', 'SpawnSector'])
+        return sector.typeIn([/*'FlagSector',*/ 'TowerSector', 'SpawnSector'])
+    },
+    isAnySector: function(sector) {
+        if (sector == null || sector.getSuperClass == undefined) {
+            return false;
+        }
+        return sector.getSuperClass().getType() == 'Sector'  //no need to use 'call'
     },
     isSectorToConquer: function(player, sector) {
         return sector != null && this.isValidSector(sector) && !sector.isOwnedByPlayer(player)

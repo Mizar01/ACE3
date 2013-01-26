@@ -39,6 +39,8 @@ TODO :
 * After some time I'm unable to select enemy spawnSectors (due to unremoved actors standing in the way)
 - After some time some hilight actor are remaining on screen.
 * After some time I can't select some sectors (this.targetSector remains void)(due to unremoved actors standing in the way)
-- this.pickables.splice(pi) // TODO : debug this. - The selection is compromised.
+* this.pickables.splice(pi) // TODO : debug this. - The selection is compromised.
+- The camera rotation by events with "," and "." is no more working because of the logic changed in ace3.camera. See
+  if it can be solved easily. NOT IMPORTANT right now.
 
 Notes on prototyping proposals.  
