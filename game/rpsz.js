@@ -131,6 +131,37 @@ function game_init_map(map, demoMode) {
     //     gameManager.registerActor(u2)
     // }
 
+    pa = new ACE3.ParticleActor({particleCount: 150, 
+                                     color: 0xffffff,
+                                     size: 0.5,
+                                     texture: "media/particle.png",
+                                     spread: 5})
+    pa.obj.position.set(0, 4, 1)
+    for (var pind = 0; pind < pa.particleCount; pind++) {
+        console.log(pind)
+        pa.obj.geometry.vertices[pind].velocity = new THREE.Vector3(0, -Math.random() * 0.3, 0);
+    }
+    pa.currentVertex = 0
+
+
+    pa.run = function() {
+        this.obj.rotation.y+=0.00001
+        var pind = 0
+        while (pind < this.particleCount) {
+            var drop = this.obj.geometry.vertices[pind]
+            drop.addSelf(drop.velocity)
+            if (drop.y < - 2) {
+                drop.y = 10
+            } 
+            //this.obj.geometry.__dirtyVertices = true;
+            this.obj.geometry.verticesNeedUpdate = true
+            //this.currentVertex = ((this.currentVertex + 1) % this.particleCount)
+            pind++
+        }
+    }
+    gameManager.registerActor(pa)
+
+
 
 }
 
@@ -193,7 +224,10 @@ function menu_define() {
     var center = { x: (w + x) / 2, y: (h + y) / 2}
 
     standardBoxStyle = "padding: 5px; border: 5px solid white;"
-    standardButtonStyle = "padding: 2px; border: 3px solid white;"
+    standardButtonStyle = {
+                            padding: "2px",
+                            border: "3px solid white",
+                          }
     bgColor = "black"
     fgColor = "white"
     // Main menu definition
@@ -208,17 +242,17 @@ function menu_define() {
     var box = new ACE3.HTMLBox("RPSZ - Main Menu", "", mOffset.x, mOffset.y, bw, bh, zIndex, fgColor, bgColor)
     box.addStyle(standardBoxStyle);
     var playButton = new ACE3.HTMLButton("NEW GAME", butX, box.y + 40, butW, 20, "game_choose()", zIndex + 1, fgColor, bgColor)
-    playButton.addStyle(standardButtonStyle)
+    playButton.css(standardButtonStyle)
     var demoButton = new ACE3.HTMLButton("DEMO", butX, box.y + 80, butW, 20, "game_demo()", zIndex + 1, fgColor, bgColor)
-    demoButton.addStyle(standardButtonStyle)
+    demoButton.css(standardButtonStyle)
     var tutorialButton = new ACE3.HTMLButton("Tutorial(TODO)", butX, box.y + 120, butW, 20, "", zIndex + 1, fgColor, bgColor)
-    tutorialButton.addStyle(standardButtonStyle)
+    tutorialButton.css(standardButtonStyle)
     var optionButton = new ACE3.HTMLButton("OPTIONS(TODO)", butX, box.y + 160, butW, 20, "", zIndex + 1, fgColor, bgColor)
-    optionButton.addStyle(standardButtonStyle)
+    optionButton.css(standardButtonStyle)
     var  aboutButton= new ACE3.HTMLButton("About(TODO)", butX, box.y + 200, butW, 20, "", zIndex + 1, fgColor, bgColor)
-    aboutButton.addStyle(standardButtonStyle)    
+    aboutButton.css(standardButtonStyle)    
     var resumeButton = new ACE3.HTMLButton("RESUME", butX, box.y + 240, butW, 20, "game_play()", zIndex + 1, "black", "yellow")
-    resumeButton.addStyle(standardButtonStyle)
+    resumeButton.css(standardButtonStyle)
     menuManager.registerActor(box)
     menuManager.registerActor(playButton)
     menuManager.registerActor(demoButton)
@@ -256,8 +290,6 @@ function menu_define() {
     returnButton.addStyle(standardButtonStyle)    
     chooseMapMenuManager.registerActor(returnButton)    
     ace3.actorManagerSet.push(chooseMapMenuManager)    
-
-
 
 }
 

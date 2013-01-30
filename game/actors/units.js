@@ -330,9 +330,13 @@ Scissors = function(owner) {
     this.pivotRot = ACE3.Builder.sphere(0.2,0xff0000)
     this.obj.add(this.pivotRot)
     this.legs = new Array()
+    this.uniform = ACE3.Utils.getStandardUniform()
+
     for (var i = 0; i <= 3; i++) {
         var yAngle = i * Math.PI/2
-        var l = ACE3.Builder.cube2(0.2, 0.4, 0.15, 0xff0000)
+        var g = new THREE.CubeGeometry(0.2, 0.4, 0.15)
+        var l = ACE3.Utils.getStandardShaderMesh(this.uniform, 'vertexShaderGeneric', 'fragmentShaderRock', g)
+        // var l = ACE3.Builder.cube2(0.2, 0.4, 0.15, 0xff0000)
         l.eulerOrder = 'YXZ'
         l.rotation.y = yAngle
         l.rotation.x = Math.PI/8*3
@@ -348,16 +352,18 @@ Scissors = function(owner) {
 }
 Scissors.extends(Unit, "Scissors")
 Scissors.prototype.setColor = function(color) {
-    ch = this.obj.children
+    // ch = this.obj.children
     this.pivotRot.material.color = new THREE.Color(color)
-    for (cid in this.legs) {
-        this.legs[cid].material.color = new THREE.Color(color)    
-    }
+    this.uniform.color.value = ACE3.Utils.getVec3Color(color)
+    // for (cid in this.legs) {
+    //     this.legs[cid].material.color = new THREE.Color(color)    
+    // }
 }
 
 Scissors.prototype.run = function() {
     Scissors.superClass.run.call(this)
-    var ty = THREE.Math.sign(Math.sin(clock.getElapsedTime())) * 0.001
+    this.uniform.time.value = clock.getElapsedTime()
+    var ty = THREE.Math.sign(Math.sin(this.uniform.time.value)) * 0.001
     for (cid in this.legs) {
         this.legs[cid].translateY(ty)
     }

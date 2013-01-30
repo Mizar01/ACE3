@@ -29,6 +29,16 @@ Function.prototype.extends = function(baseClass, typeName) {
 }
 
 
+if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = (window.webkitRequestAnimationFrame ||
+                                window.mozRequestAnimationFrame ||
+                                window.oRequestAnimationFrame ||
+                                window.msRequestAnimationFrame ||
+                                function (callback) {
+                                  return window.setTimeout(callback, 17 /*~ 1000/60*/);
+                                });
+}
+
 
 var _ace3 = null
 
@@ -129,14 +139,15 @@ ACE3.prototype = {
     run: function() {
         //console.log(this.eventManager.pressed(16))
         //this.pickManager.run()
+        requestAnimationFrame(function() {_ace3.run()})
         for (id in this.actorManagerSet) {
-            this.actorManagerSet[id].run()  
+            this.actorManagerSet[id].run()
         }
         this.camera.run()
         this.renderer.render(this.scene, this.camera.cameraObj)
         this.eventManager.resetUpKeys()
         this.eventManager.resetMouseReleased()
-        setTimeout("_ace3.run()",10)
+        //setTimeout("_ace3.run()",10)
     },
     
     /**
