@@ -158,7 +158,7 @@ function initMapObjects(terrainActor, mapProps) {
 			if (t == "M") {
 				var s = new MagneticSector(x, z, ssx, ssz)
 			}else if (t == "F") {
-				var s = new SpawnSector(x, z, ssx, ssz)
+				var s = new SpawnSector(terrainActor, x, z, ssx, ssz)
 			}else if (t == "T") {
 				var s = new TowerSector(terrainActor, x, z, ssx, ssz)
 			}else {

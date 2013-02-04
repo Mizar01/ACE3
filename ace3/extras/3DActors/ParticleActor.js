@@ -1,3 +1,8 @@
+/**
+* The ParticleActor creates some particles, and the default disposition of them
+* is within a box with size given by spread property.
+* You must to implement your own reset method to change disposition.
+*/
 ACE3.ParticleActor = function(props) {
 	ACE3.Actor3D.call(this)
 
@@ -18,16 +23,19 @@ ACE3.ParticleActor = function(props) {
 	}
     // now create the individual particles
     for(var p = 0; p < this.particleCount; p++) {
-        var pX = Math.random() * this.spread * 2 - this.spread
-        var pY = Math.random() * this.spread * 2 - this.spread
-        var pZ = Math.random() * this.spread * 2 - this.spread
-        particle = new THREE.Vector3(pX, pY, pZ);
-        // add it to the geometry
+        particle = ACE3.Math.randVector3(this.spread)
         particles.vertices.push(particle);
     }
     // create the particle system
     this.obj = new THREE.ParticleSystem(particles, pMaterial);
-}
 
+}
 ACE3.ParticleActor.extends(ACE3.Actor3D, "ACE3.ParticleActor")
 
+/**
+* Updates geometry of the vertices
+*/
+ACE3.ParticleActor.prototype.refresh = function() {
+    //this.obj.geometry.__dirtyVertices = true;
+    this.obj.geometry.verticesNeedUpdate = true
+}

@@ -76,10 +76,10 @@ Unit.prototype.resetAllTargets = function() {
 
 Unit.prototype.run = function() {
 
-    if (this.alive && this.life <= 0) {
-        this.setForRemoval()
-        return
-    }
+    // if (this.alive && this.life <= 0) {
+    //     this.setForRemoval()
+    //     return
+    // }
 
     //this.obj.rotation.y += 0.01
     var tu = this.targetUnit
@@ -211,6 +211,14 @@ Unit.prototype.getSpeed = function() {
     return this.speed
 }
 
+Unit.prototype.getDamage = function(damage) {
+    this.life -= damage
+    if (this.life < 0) {
+        this.alive = false
+        this.manager.registerActor(new ACE3.Explosion(this.obj.position.clone()))
+    }
+}
+
 /**
 * Find the nearest sector that is not already owned by the player
 * The best algorithm should start from the actor position and go to
@@ -316,7 +324,7 @@ Paper.prototype.setColor = function(color) {
 }
 Paper.prototype.run = function() {
     Paper.superClass.run.call(this) //executes the Unit run method on this object
-    this.uniform.time.value = clock.getElapsedTime()
+    this.uniform.time.value = ace3.time.frameTime
 }
 
 
@@ -362,7 +370,7 @@ Scissors.prototype.setColor = function(color) {
 
 Scissors.prototype.run = function() {
     Scissors.superClass.run.call(this)
-    this.uniform.time.value = clock.getElapsedTime()
+    this.uniform.time.value = ace3.time.frameTime
     var ty = THREE.Math.sign(Math.sin(this.uniform.time.value)) * 0.001
     for (cid in this.legs) {
         this.legs[cid].translateY(ty)
@@ -386,5 +394,5 @@ Rock.prototype.setColor = function(color) {
 }
 Rock.prototype.run = function() {
     Rock.superClass.run.call(this)
-    this.uniform.time.value = clock.getElapsedTime()
+    this.uniform.time.value = ace3.time.frameTime
 }

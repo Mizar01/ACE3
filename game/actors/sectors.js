@@ -202,14 +202,26 @@ FlagSector = function(posx, posy, sizex, sizey) {
 }
 FlagSector.extends(Sector, "FlagSector")
 
-SpawnSector = function(posx, posy, sizex, sizey) {
+SpawnSector = function(terrain, posx, posy, sizex, sizey) {
     Sector.call(this,posx, posy, sizex, sizey)
     this.spawner = new Spawner(sizex, sizey)
     this.innerActor = this.spawner
     this.addActor(this.spawner)
     this.spawner.sector = this
+
+    // Ascension particle effect
+    this.ascEffect = new ACE3.Ascension()
+    // Again (as with the tower) , we add the ascension effect to the tarrain
+    // to avoid messing with rotation relatives to parent.
+    terrain.addActor(this.ascEffect)
 }
 SpawnSector.extends(Sector, "SpawnSector")
+
+SpawnSector.prototype.setPosition = function(x, y, z) {
+    this.obj.position.set(x, y, z)
+    this.ascEffect.obj.position.set(x, y, z)
+    this.ascEffect.obj.position.y += 1
+}
 
 
 // 
@@ -259,7 +271,7 @@ Spawner = function(sizex, sizey) {
     m.opacity = 0.1
     var g = new THREE.PlaneGeometry(sizex, sizey)
     //var m = new THREE.MeshBasicMaterial({'color':0xff00ff})
-    this.obj = new THREE.Mesh(g, m)     
+    this.obj = new THREE.Mesh(g, m)
 }
 Spawner.extends(ACE3.Actor3D, "Spawner")
 
@@ -272,7 +284,7 @@ Spawner.prototype.run = function() {
             this.currentCooldown = s.owner.getSpawnCooldown()
         }
     }
-    this.uniform.time.value = clock.getElapsedTime()
+    this.uniform.time.value = ace3.time.frameTime
 } 
 Spawner.prototype.setColor = function(color) {
     var c = new THREE.Color( color );
@@ -300,7 +312,7 @@ Spawner.prototype.spawnUnit = function() {
 
 Magnet = function(sizex, sizey) {
     ACE3.Actor3D.call(this)
-    this.lastTime = clock.getElapsedTime()
+    this.lastTime = ace3.time.frameTime
 
     this.uniform = {
         time: { type: "f", value: 1.0 },
@@ -310,10 +322,11 @@ Magnet = function(sizex, sizey) {
         animTime: {type: "f", value: THREE.Math.randFloat(0, 25) },
         animTimeMax: {type: "f", value: 40.0 },
     };
+
     var m = new THREE.ShaderMaterial( {
         uniforms: this.uniform,
         vertexShader: ACE3.Utils.getShader('vertexShaderGeneric'),
-        fragmentShader: ACE3.Utils.getShader('fragmentShader2'),
+        fragmentShader: ACE3.Utils.getShader('fragmentShaderElectric'),  //fragmentShader2
     });
     m.transparent = true
     m.opacity = 0.4
@@ -323,8 +336,8 @@ Magnet = function(sizex, sizey) {
 }
 Magnet.extends(ACE3.Actor3D, "Magnet")
 Magnet.prototype.run = function() {
-    this.uniform.animTime.value += 1.0;
-    this.uniform.time.value = clock.getElapsedTime()
+    //this.uniform.animTime.value += 1.0;
+    this.uniform.time.value = ace3.time.frameTime - this.uniform.animTime.value
     var t = this.uniform.animTime.value
     var tmax = this.uniform.animTimeMax.value
     if (t == Math.floor(tmax/2)) {
@@ -342,7 +355,7 @@ Tower = function(sector) {
     this.damage = 6
     this.cooldown = 90
     this.currentCooldown = 0
-    this.height = 0.8
+    this.height = 1.8
     this.obj = ACE3.Builder.cylinder(0.4, this.height, 0xaaaaaa)
 
     //Alternate mesh
@@ -367,7 +380,7 @@ Tower = function(sector) {
 
     this.cannon = ACE3.Builder.cube2(0.1, 0.1, 0.8, 0x333333)
     this.obj.add(this.cannon)
-    this.cannon.position.y = 0.3
+    this.cannon.position.y = this.height / 2 * 0.8
     this.cannon.position.z = 0.2
     this.sector = sector
     //console.log(this.sector.obj.position)

@@ -40,7 +40,8 @@ Shot.prototype.damageTarget = function() {
         (t1 == "Scissors" && t2 == "Rock")) {
         dinc = - 2
     }
-    this.target.life -= (this.damage + dinc)        
+    this.target.getDamage(this.damage + dinc)
+    // this.target.life -= (this.damage + dinc)       
 }
 
 Shot.prototype.followActor = function(actor) {

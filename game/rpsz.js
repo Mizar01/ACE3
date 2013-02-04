@@ -16,15 +16,10 @@ var mainThemeSound = null
 
 var testShader = null
 
-var testSciss = null
-
-
 //useful actor shortcuts
 var terrain = null
 
 var game_started = false
-
-var clock = new THREE.Clock();
 
 
 function game_init() {
@@ -74,7 +69,7 @@ function game_init_map(map, demoMode) {
     //build random units for p and p2
     var totalUnits = 4
     if (demoMode) {
-        totalUnits = 10
+        totalUnits = 50
     }
 
     var posy = terrain.obj.position.y + 1
@@ -131,35 +126,42 @@ function game_init_map(map, demoMode) {
     //     gameManager.registerActor(u2)
     // }
 
-    pa = new ACE3.ParticleActor({particleCount: 150, 
-                                     color: 0xffffff,
-                                     size: 0.5,
-                                     texture: "media/particle.png",
-                                     spread: 5})
-    pa.obj.position.set(0, 4, 1)
-    for (var pind = 0; pind < pa.particleCount; pind++) {
-        console.log(pind)
-        pa.obj.geometry.vertices[pind].velocity = new THREE.Vector3(0, -Math.random() * 0.3, 0);
-    }
-    pa.currentVertex = 0
+    // var pa = new ACE3.ParticleActor({particleCount: 150, 
+    //                                  color: 0xffffff,
+    //                                  size: 0.5,
+    //                                  texture: "media/particle.png",
+    //                                  spread: 5})
+    // pa.obj.position.set(0, 4, 1)
+    // for (var pind = 0; pind < pa.particleCount; pind++) {
+    //     console.log(pind)
+    //     pa.obj.geometry.vertices[pind].velocity = new THREE.Vector3(0, -Math.random() * 0.3, 0);
+    // }
+    // pa.currentVertex = 0
 
 
-    pa.run = function() {
-        this.obj.rotation.y+=0.00001
-        var pind = 0
-        while (pind < this.particleCount) {
-            var drop = this.obj.geometry.vertices[pind]
-            drop.addSelf(drop.velocity)
-            if (drop.y < - 2) {
-                drop.y = 10
-            } 
-            //this.obj.geometry.__dirtyVertices = true;
-            this.obj.geometry.verticesNeedUpdate = true
-            //this.currentVertex = ((this.currentVertex + 1) % this.particleCount)
-            pind++
-        }
-    }
-    gameManager.registerActor(pa)
+    // pa.run = function() {
+    //     this.obj.rotation.y+=0.00001
+    //     var pind = 0
+    //     while (pind < this.particleCount) {
+    //         var drop = this.obj.geometry.vertices[pind]
+    //         drop.addSelf(drop.velocity)
+    //         if (drop.y < - 2) {
+    //             drop.y = 10
+    //         } 
+    //         //this.currentVertex = ((this.currentVertex + 1) % this.particleCount)
+    //         pind++
+    //     }
+    //     this.obj.geometry.verticesNeedUpdate = true
+    // }
+
+    // gameManager.registerActor(pa)
+
+    //expl = new ACE3.Explosion()
+    //gameManager.registerActor(expl)
+
+    //TEST SKYBOX
+    skyBox = new ACE3.SkyBox("media/sb1-")
+    gameManager.registerActor(skyBox)
 
 
 

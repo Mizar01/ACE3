@@ -78,6 +78,8 @@ ACE3 = function() {
     
     this.actorManagerSet = []
     this.actorManagerSet.push(this.defaultActorManager)
+
+    this.time = new ACE3.TimeManager()
     
     //Setting controls of events
     $("body").keydown(function(e) {
@@ -139,6 +141,7 @@ ACE3.prototype = {
     run: function() {
         //console.log(this.eventManager.pressed(16))
         //this.pickManager.run()
+        this.time.run()
         requestAnimationFrame(function() {_ace3.run()})
         for (id in this.actorManagerSet) {
             this.actorManagerSet[id].run()

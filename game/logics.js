@@ -264,7 +264,7 @@ CameraDemoLogic = function() {
 CameraDemoLogic.extends(ACE3.Logic, "CameraDemoLogic")
 
 CameraDemoLogic.prototype.run = function() {
-    var t = clock.getElapsedTime()
+    var t = ace3.time.frameTime
 
     if (this.targetUnit == null || (t - this.lastTimeChange) > this.timeToChange) {
         this.changeUnit()

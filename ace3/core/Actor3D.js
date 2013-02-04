@@ -84,4 +84,13 @@ ACE3.Actor3D.prototype.XZDistanceTo = function (targetActor) {
 ACE3.Actor3D.prototype.setColor = function(color) {
     this.obj.material.color = new THREE.Color(color)
 }
+
+ACE3.Actor3D.prototype.hide = function() {
+    this.obj.visible = false
+}
+
+ACE3.Actor3D.prototype.show = function() {
+    this.obj.visible = true
+}
+
     
