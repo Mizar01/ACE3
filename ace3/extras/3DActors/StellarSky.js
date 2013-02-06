@@ -9,7 +9,7 @@ ACE3.StellarSky = function(origin, radius) {
         spread: 0,
         particleCount: 2000,
     });
-    this.radius = radius || 2000
+    this.radius = radius || 800
     this.origin = origin || new THREE.Vector3(0, 0, 0)
     this.needReset = true
     //this.growSpeed = 0.3
@@ -24,8 +24,8 @@ ACE3.StellarSky.prototype.reset = function(vec3Pos) {
 	for (var pi = 0; pi < this.particleCount; pi++) {
 		var p = this.obj.geometry.vertices[pi]
 		p.copy(vec3Pos)
-		// TODO : improve the disposition. Right now it's possible to have stars near the origin.
-		var mult = ACE3.Math.randVector3(1).multiplyScalar(this.radius) // random direction chosen for every particle.
+		var radius = this.radius + THREE.Math.randInt(0, this.radius/8)
+		var mult = ACE3.Math.randVector3(1).normalize().multiplyScalar(radius);
 		p.addSelf(mult)
 	}
 	this.origin = vec3Pos
@@ -39,6 +39,6 @@ ACE3.StellarSky.prototype.run = function() {
 		this.reset()
 	}
 	// TODO : finish to implement rotations.
-	//this.obj.rotation.y += 0.0002
+	this.obj.rotation.y += 0.0002
 
 }

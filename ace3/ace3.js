@@ -54,6 +54,13 @@ ACE3 = function() {
     this.projector = new THREE.Projector();
     
     this.container = document.getElementById("container")
+
+    var offset = $(this.container).offset()
+    var w = $(this.container).width()
+    var h = $(this.container).height()
+    this.vpOffset = new THREE.Vector2(offset.left, offset.top) //size vector of the viewport
+    this.vpSize = new THREE.Vector2(w, h)  // size vector of the viewport
+
     this.renderer = new THREE.WebGLRenderer()
     this.renderClearColor = 0x000000 // 0xaaaaaa
     this.renderer.setClearColorHex(this.renderClearColor, 1)
@@ -108,7 +115,6 @@ ACE3 = function() {
         _ace3.screen.x = e.clientX
         _ace3.screen.y = e.clientY
     });
-
 }
 
 ACE3.prototype = {
@@ -170,6 +176,28 @@ ACE3.prototype = {
         var intersects = ray.intersectObjects( this.pickManager.pickables )
         return intersects[0]
     },
+
+    /**
+    * Get the position inside the container given the percentage position
+    * The recalculation is done everytime we have a refresh
+    * Return a THREE.Vector2 
+    */
+    getPercPos: function(percX, percY) {
+        var x = this.vpOffset.x + this.vpSize.x/100 * percX
+        var y = this.vpOffset.y + this.vpSize.y/100 * percY
+        return new THREE.Vector2(x, y) 
+    },
+    // TODO : TO FINISH do something when window is resized, like recalculate vpOffset and vpSize
+    windowResized: function() {
+        var offset = $(this.container).offset()
+        var w = $(this.container).width()
+        var h = $(this.container).height()
+        this.vpOffset = new THREE.Vector2(offset.left, offset.top) //size vector of the viewport
+        this.vpSize = new THREE.Vector2(w, h)  // size vector of the viewport
+    },
+
+
+
     
    
 }

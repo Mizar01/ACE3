@@ -1,7 +1,7 @@
 // Main file for main operations, settings and all
 
 var ace3 = null
-var players = new Array() //associative array for players
+var players = [] //associative array for players
 var test_logic = null
 var gameManager = null // shortcut to ace3.defaultActorManager
 var menuManager = null // shortcut to another ActorManager for menus
@@ -55,6 +55,7 @@ function game_init_map(map, demoMode) {
     gameManager.registerActor(terrain)
   
     //Player init
+    players = []
     if (!demoMode) {
         p1 = new Player("mizar", ACE3.Constants.CONTROLLER_HUMAN)
     }else {
@@ -114,57 +115,21 @@ function game_init_map(map, demoMode) {
 
     gameManager.registerLogic(new ESCPauseGameLogic())
 
-    // nu2 = new Unit2(0,0)
-    // nu2.testAttr = "cad"
-    // nu2.setColor(0xffffff)
-    // gameManager.registerActor(nu2)
-
-
-    // for (var i = 0; i <= 1000; i++) {
-    //     var u2 = new Unit2(THREE.Math.randInt(-20, 20), THREE.Math.randInt(-20, 20))
-    //     u2.setColor(THREE.Math.randInt(0,0xffffff))
-    //     gameManager.registerActor(u2)
-    // }
-
-    // var pa = new ACE3.ParticleActor({particleCount: 150, 
-    //                                  color: 0xffffff,
-    //                                  size: 0.5,
-    //                                  texture: "media/particle.png",
-    //                                  spread: 5})
-    // pa.obj.position.set(0, 4, 1)
-    // for (var pind = 0; pind < pa.particleCount; pind++) {
-    //     console.log(pind)
-    //     pa.obj.geometry.vertices[pind].velocity = new THREE.Vector3(0, -Math.random() * 0.3, 0);
-    // }
-    // pa.currentVertex = 0
-
-
-    // pa.run = function() {
-    //     this.obj.rotation.y+=0.00001
-    //     var pind = 0
-    //     while (pind < this.particleCount) {
-    //         var drop = this.obj.geometry.vertices[pind]
-    //         drop.addSelf(drop.velocity)
-    //         if (drop.y < - 2) {
-    //             drop.y = 10
-    //         } 
-    //         //this.currentVertex = ((this.currentVertex + 1) % this.particleCount)
-    //         pind++
-    //     }
-    //     this.obj.geometry.verticesNeedUpdate = true
-    // }
-
-    // gameManager.registerActor(pa)
-
-    //expl = new ACE3.Explosion()
-    //gameManager.registerActor(expl)
-
     //TEST SKYBOX
     //var skyBox = new ACE3.SkyBox("media/sb1-")
     //gameManager.registerActor(skyBox)
 
     var stars = new ACE3.StellarSky()
     gameManager.registerActor(stars)
+
+    //Adding some display values
+    var t1units = new ACE3.DisplayValue("Team " + players[0].name, 0, ace3.getPercPos(70, 95))
+    t1units.run = function() { this.setValue(players[0].unitCount) }
+    gameManager.registerActor(t1units)
+    var t2units = new ACE3.DisplayValue("Team " + players[1].name, 0, ace3.getPercPos(80, 95))
+    t2units.run = function() { this.setValue(players[1].unitCount) }    
+    gameManager.registerActor(t2units)
+
 
 
 
