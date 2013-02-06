@@ -64,11 +64,11 @@ PickPlane = function(terrainActor) {
     // this plane is in the same position (a little lower) of the terrain but it's a little greater
     this.sx = terrainActor.totalSizeX + 5 
     this.sz = terrainActor.totalSizeZ + 5
-    this.obj = ACE3.Builder.squareXZ(this.sx, this.sz, 0xff0000)
-    this.obj.material.transparent = true
-    this.obj.material.opacity = 0.0
+    this.obj = ACE3.Builder.squareXZ(this.sx, this.sz, 0x000000)
+    this.obj.material.transparent = false
+    this.obj.material.opacity = 1
     this.setPickable()
-    this.obj.position.y = terrainActor.obj.position.y - 0.1
+    this.obj.position.y = terrainActor.obj.position.y - 0.4
 }
 PickPlane.extends(ACE3.Actor3D, "PickPlane")
 
@@ -321,6 +321,7 @@ Magnet = function(sizex, sizey) {
         randPos2: {type: "v2", value: new THREE.Vector2(THREE.Math.randFloatSpread(2), THREE.Math.randFloatSpread(2)) },
         animTime: {type: "f", value: THREE.Math.randFloat(0, 25) },
         animTimeMax: {type: "f", value: 40.0 },
+        rgbMult: {type: "v3", value: ACE3.Math.randVector3(2.0)}
     };
 
     var m = new THREE.ShaderMaterial( {
@@ -338,15 +339,15 @@ Magnet.extends(ACE3.Actor3D, "Magnet")
 Magnet.prototype.run = function() {
     //this.uniform.animTime.value += 1.0;
     this.uniform.time.value = ace3.time.frameTime - this.uniform.animTime.value
-    var t = this.uniform.animTime.value
-    var tmax = this.uniform.animTimeMax.value
-    if (t == Math.floor(tmax/2)) {
-        this.uniform.randPos2.value = ACE3.Math.randVector2(2)
-    } 
-    if (t > tmax) {
-        this.uniform.randPos.value = ACE3.Math.randVector2(2)
-        this.uniform.animTime.value = 0.0;
-    }
+    // var t = this.uniform.animTime.value
+    // var tmax = this.uniform.animTimeMax.value
+    // if (t == Math.floor(tmax/2)) {
+    //     this.uniform.randPos2.value = ACE3.Math.randVector2(2)
+    // } 
+    // if (t > tmax) {
+    //     this.uniform.randPos.value = ACE3.Math.randVector2(2)
+    //     this.uniform.animTime.value = 0.0;
+    // }
 }
 
 Tower = function(sector) {

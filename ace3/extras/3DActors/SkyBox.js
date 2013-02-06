@@ -21,7 +21,7 @@ ACE3.SkyBox = function(texturePrefix, extension) {
 		side: THREE.BackSide
 	});
 	// build the skybox Mesh 
-	this.obj = new THREE.Mesh( new THREE.CubeGeometry( 1000, 1000, 1000, 1, 1, 1), material );
+	this.obj = new THREE.Mesh( new THREE.CubeGeometry( 4000, 4000, 4000, 1, 1, 1), material );
 	this.obj.flipSided = true;
 
 }

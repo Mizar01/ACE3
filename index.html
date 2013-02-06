@@ -18,6 +18,7 @@
       <script src="ace3/tools/Builder.js"></script>
       <script src="ace3/extras/3DActors/SkyBox.js"></script>
       <script src="ace3/extras/3DActors/ParticleActor.js"></script> 
+      <script src="ace3/extras/3DActors/StellarSky.js"></script>
       <script src="ace3/extras/3DActors/Explosion.js"></script>
       <script src="ace3/extras/3DActors/Ascension.js"></script>   
       <script src="ace3/extras/HTMLActors/HTMLButton.js"></script>     
@@ -161,12 +162,13 @@
                 float angle = 6.28 * cycle;
                 vec3 c = vec3(.0, .0, .0);
                 vec2 p = -1.0 + 2.0 * vUv; // coords with 0,0 in the middle of the material (limits -1 and 1)
-
+                float opacity = 1.0;
                 float border = 0.06;
                 if (p.x < (-1.0 + border) || p.x > (1.0 - border) || p.y < (-1.0 + border) || p.y > (1.0 - border)) {
                   c = color;
+                  opacity = 0.1 + abs(sin(angle));
                 }
-                float opacity = 0.1 + abs(sin(angle));
+                
                 if (opacity > 1.0) {
                   opacity = 1.0;
                 }
@@ -210,7 +212,7 @@
 
                 c = vec3(abs(sin(angle)) * 0.3, 1.0/(distP2 * 3.0), abs(cos(angle)) * 0.3);
                 
-                float opacity = 0.8;
+                float opacity = 1.0;
                 //if (opacity > 1.0) {
                 //  opacity = 1.0;
                 //}
@@ -354,6 +356,7 @@
               uniform float time;
               uniform vec2 resolution;
               uniform vec4 mouse;
+              uniform vec3 rgbMult;
               varying vec2 vUv;
 
               void main(void) {
@@ -385,9 +388,11 @@
 
                   //set the output color
                   if (col < 0.6) {
-                    gl_FragColor = vec4(col, max(0.3, col * 5.0), col, 1.);
+                    gl_FragColor = vec4(col * rgbMult.x, 
+                                        max(0.1, col * 5.0) * rgbMult.y, 
+                                        col * rgbMult.z, 1.);
                   }else {
-                    gl_FragColor = vec4(col, col/2.0, 0.0, 1.0);
+                    gl_FragColor = vec4(col * rgbMult.x, col/2.0 * rgbMult.y, 0.0, 1.0);
                   }
               }
 
@@ -504,7 +509,7 @@
             
       </div> 
       <audio id='main_theme'>
-        <!--<source src='media/up1.mp3' type="audio/mpeg"/>-->
+        <!--<source src='media/up1.mp3' type="audio/mpeg"/>
         Your Browser does not support HTML 5 Audio Element
       </audio>
 </body>

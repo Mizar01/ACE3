@@ -6,6 +6,7 @@ ACE3.Actor = function() {
     this.manager = null // the object that is managing this actor.
     this.actorChildren = {} // associative array of children actors ("id" -> actor)
                                      // you must implement the right way to add ids to this vector.
+    this.parentActor = null // null only if this actor is not a direct children of another actor.
 
 }
 
@@ -60,6 +61,9 @@ ACE3.Actor.prototype = {
     addActor: function(actor) {
         //console.log("superClass.addActor called!")
         this.actorChildren["" + actor.getId()] = actor
+        //if the actor was previously attached to a manager it will be detached.
+        actor.manager = null
+        actor.parentActor = this
     },
 
     /**
@@ -68,6 +72,7 @@ ACE3.Actor.prototype = {
     * the child object alive in memory.
     */
     removeActor: function(actor) {
+        actor.parentActor = null
         delete this.actorChildren["" + actor.getId()]  // DON'T USE SPLICE, we are not using iterative counts.
     },
 
@@ -101,5 +106,19 @@ ACE3.Actor.prototype = {
             }
         }
         return false
+    },
+
+    /**
+    * Finds the manager in the tree of this actor. The actor in facts can be a children
+    * of some other actor.
+    */
+    getManager: function() {
+        if (this.manager == null && this.parentActor == null) {
+            return null
+        }
+        if (this.manager == null) {
+            return this.parentActor.getManager()
+        }
+        return this.manager
     },
 }

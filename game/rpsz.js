@@ -160,8 +160,11 @@ function game_init_map(map, demoMode) {
     //gameManager.registerActor(expl)
 
     //TEST SKYBOX
-    skyBox = new ACE3.SkyBox("media/sb1-")
-    gameManager.registerActor(skyBox)
+    //var skyBox = new ACE3.SkyBox("media/sb1-")
+    //gameManager.registerActor(skyBox)
+
+    var stars = new ACE3.StellarSky()
+    gameManager.registerActor(stars)
 
 
 
