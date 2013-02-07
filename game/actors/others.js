@@ -1,11 +1,15 @@
-Shot = function(owner, target) {
+/**
+* Notes : the position is really necessary if the owner position is not
+* really the starting of the projectiles.
+*/
+Shot = function(owner, target, position) {
     ACE3.Actor3D.call(this)
     this.owner = owner
     this.ownerType = owner.getType() //I store now the type , because when the bullet collides the owner could be dead
     this.damage = owner.damage
     this.target = target
     this.obj = ACE3.Builder.cube2(.1, .1, .3, 0xffff00)
-    this.obj.position = owner.obj.position.clone()
+    this.obj.position = position || owner.obj.position.clone()
     //console.log(this.obj)
     this.lookAtXZFixed(target.obj.position)
     this.collisionDistance = 0.5

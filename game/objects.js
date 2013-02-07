@@ -6,6 +6,7 @@ function Player(name,controller) {
     this.color = 0xff0000 //red default
     players[this.name] = this
     this.unitCount = 0
+    this.maxUnits = 12
     this.sectorCount = 0
     //this.units = new Array()
     /**

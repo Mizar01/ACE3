@@ -126,7 +126,7 @@ function game_init_map(map, demoMode) {
     var t1units = new ACE3.DisplayValue("Team " + players[0].name, 0, ace3.getPercPos(70, 95))
     t1units.run = function() { this.setValue(players[0].unitCount) }
     gameManager.registerActor(t1units)
-    var t2units = new ACE3.DisplayValue("Team " + players[1].name, 0, ace3.getPercPos(80, 95))
+    var t2units = new ACE3.DisplayValue("Team " + players[1].name, 0, ace3.getPercPos(85, 95))
     t2units.run = function() { this.setValue(players[1].unitCount) }    
     gameManager.registerActor(t2units)
 

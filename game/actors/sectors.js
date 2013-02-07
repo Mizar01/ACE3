@@ -277,7 +277,7 @@ Spawner.extends(ACE3.Actor3D, "Spawner")
 
 Spawner.prototype.run = function() {
     var s = this.sector
-    if (s.owner != null) {
+    if (s.owner != null && s.owner.unitCount < s.owner.maxUnits) {
         this.refreshCooldown()
         if (this.currentCooldown == 0) {
             this.spawnUnit()
@@ -435,7 +435,7 @@ Tower.prototype.setOwner = function(player) {
 Tower.prototype.shoot = function() {
     this.lookAtXZFixed(this.targetEnemy.obj.position) 
     if (this.currentCooldown <= 0) {
-        var s = new Shot(this, this.targetEnemy)
+        var s = new Shot(this, this.targetEnemy, this.cannon.matrixWorld.getPosition().clone())
         gameManager.registerActor(s)
         this.currentCooldown = this.cooldown
     }
