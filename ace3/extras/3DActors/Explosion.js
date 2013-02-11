@@ -30,6 +30,7 @@ ACE3.Explosion.prototype.reset = function(vec3Pos) {
 ACE3.Explosion.prototype.run = function() {
 	if (this.needReset) {
 		this.reset()
+		shakeCameraLogic.activate()
 	}
 	var o = this.origin
 	for (var pi = 0; pi < this.particleCount; pi++) {

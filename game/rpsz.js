@@ -21,6 +21,8 @@ var terrain = null
 
 var game_started = false
 
+var shakeCameraLogic = null
+
 
 function game_init() {
     ace3 = new ACE3()
@@ -112,7 +114,8 @@ function game_init_map(map, demoMode) {
         gameManager.registerLogic(new CameraDemoLogic())
     }
 
-
+    shakeCameraLogic = new ShakeCameraLogic()
+    gameManager.registerLogic(shakeCameraLogic)
     gameManager.registerLogic(new ESCPauseGameLogic())
 
     //TEST SKYBOX
@@ -129,6 +132,8 @@ function game_init_map(map, demoMode) {
     var t2units = new ACE3.DisplayValue("Team " + players[1].name, 0, ace3.getPercPos(85, 95))
     t2units.run = function() { this.setValue(players[1].unitCount) }    
     gameManager.registerActor(t2units)
+
+
 
 
 
@@ -209,19 +214,20 @@ function menu_define() {
     var butW = 130
     var butX = center.x - butW / 2
     var mOffset = { x: center.x - bw / 2, y: center.y - bh / 2}
-    var box = new ACE3.HTMLBox("RPSZ - Main Menu", "", mOffset.x, mOffset.y, bw, bh, zIndex, fgColor, bgColor)
+    var box = new ACE3.HTMLBox("Star Drift <br/> drones gone mad", "", mOffset.x, mOffset.y, bw, bh, zIndex, fgColor, bgColor)
     box.addStyle(standardBoxStyle);
-    var playButton = new ACE3.HTMLButton("NEW GAME", butX, box.y + 40, butW, 20, "game_choose()", zIndex + 1, fgColor, bgColor)
+    var initY = box.y + 65
+    var playButton = new ACE3.HTMLButton("NEW GAME", butX, initY + 40, butW, 20, "game_choose()", zIndex + 1, fgColor, bgColor)
     playButton.css(standardButtonStyle)
-    var demoButton = new ACE3.HTMLButton("DEMO", butX, box.y + 80, butW, 20, "game_demo()", zIndex + 1, fgColor, bgColor)
+    var demoButton = new ACE3.HTMLButton("DEMO", butX, initY + 80, butW, 20, "game_demo()", zIndex + 1, fgColor, bgColor)
     demoButton.css(standardButtonStyle)
-    var tutorialButton = new ACE3.HTMLButton("Tutorial(TODO)", butX, box.y + 120, butW, 20, "", zIndex + 1, fgColor, bgColor)
+    var tutorialButton = new ACE3.HTMLButton("Tutorial(TODO)", butX, initY + 120, butW, 20, "", zIndex + 1, fgColor, bgColor)
     tutorialButton.css(standardButtonStyle)
-    var optionButton = new ACE3.HTMLButton("OPTIONS(TODO)", butX, box.y + 160, butW, 20, "", zIndex + 1, fgColor, bgColor)
+    var optionButton = new ACE3.HTMLButton("OPTIONS(TODO)", butX, initY + 160, butW, 20, "", zIndex + 1, fgColor, bgColor)
     optionButton.css(standardButtonStyle)
-    var  aboutButton= new ACE3.HTMLButton("About(TODO)", butX, box.y + 200, butW, 20, "", zIndex + 1, fgColor, bgColor)
+    var  aboutButton= new ACE3.HTMLButton("About(TODO)", butX, initY + 200, butW, 20, "", zIndex + 1, fgColor, bgColor)
     aboutButton.css(standardButtonStyle)    
-    var resumeButton = new ACE3.HTMLButton("RESUME", butX, box.y + 240, butW, 20, "game_play()", zIndex + 1, "black", "yellow")
+    var resumeButton = new ACE3.HTMLButton("RESUME", butX, initY + 240, butW, 20, "game_play()", zIndex + 1, "black", "yellow")
     resumeButton.css(standardButtonStyle)
     menuManager.registerActor(box)
     menuManager.registerActor(playButton)

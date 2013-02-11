@@ -316,3 +316,35 @@ CameraDemoLogic.prototype.findNewPlace = function() {
     ace3.camera.pivot.position.set(x, y, z)
 }
 
+ShakeCameraLogic = function() {
+    ACE3.Logic.call(this)
+    this.shakeAmplitude = 0
+    this.maxShakeAmplitude = 0.2
+    // this.originalPosition = null
+}
+
+ShakeCameraLogic.extends(ACE3.Logic, "ShakeCameraLogic")
+
+ShakeCameraLogic.prototype.activate = function() {
+    this.shakeAmplitude = this.maxShakeAmplitude
+    if (this.originalPosition == null) {
+        // this.originalPosition = ace3.camera.pivot.position.x
+    }
+}
+
+ShakeCameraLogic.prototype.run = function() {
+    var sa = this.shakeAmplitude
+    if (sa > 0) {
+        ace3.camera.pivot.position.x += Math.sin(sa * 200) * sa
+        this.shakeAmplitude -= this.maxShakeAmplitude / 20
+        if (this.shakeAmplitude <= 0) {
+            this.deactivate()
+        }
+    }
+}
+
+ShakeCameraLogic.prototype.deactivate = function() {
+    // ace3.camera.pivot.position.x = this.originalPosition
+}
+
+
