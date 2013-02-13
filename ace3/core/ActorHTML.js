@@ -1,10 +1,18 @@
+/**
+* HTML Actors are outside the _ace3_container, so their events are not managed, nor intercepted
+* by the eventManager, for many reasons this is useful. 
+* An html actor always call it's click function when it's clicked. He has a standard onclick event
+* on it, intercepted only by this element alone. No other element can activate this event.
+* So it doesn't interfere with object picking. It's like to be on another window, even if visually
+* it is drawn on top of the ace3 container.
+*/
 ACE3.ActorHTML = function() {
     ACE3.Actor.call(this)
     this.obj = null
     this.baseCss = ""
     this.baseClasses = ""
     this.content = ""
-    this.clickReset = false // if true, the click on this button is the only event fired, because 
+    // this.clickReset = true  // if true, the click on this button is the only event fired, because 
                             // the mouse status will be reset. So it's not going to generate 
                             // mess with undeground pickable objects.
                             // TODO : I have yet to think how to implement this.
@@ -12,7 +20,12 @@ ACE3.ActorHTML = function() {
 
     this.onClickFunction = null
 
-    this.onclick = "_ace3.findActorById('" + this.id + "').click()"
+    this.onclick = "onclick=\"_ace3.findActorById('" + this.id + "').click()\""
+
+    //this.onmouseover = "onmousedown=\"_ace3.eventManager.ignoreMouseEvent(); console.log('cc')\""
+
+    this.interceptAttrs = this.onclick
+
 
 }
 
@@ -79,5 +92,10 @@ ACE3.ActorHTML.prototype.removeClass = function(className) {
 }
 
 ACE3.ActorHTML.prototype.click = function(className) {
+    // if (this.clickReset) {
+    //     // _ace3.eventManager.resetMousePressed()
+    //     // _ace3.eventManager.resetMouseReleased()
+    //     _ace3.eventManager.forceResetMouse()
+    // }
     this.onClickFunction()
 }

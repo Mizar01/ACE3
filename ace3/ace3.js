@@ -53,7 +53,9 @@ ACE3 = function() {
     this.pickManager = new ACE3.PickManager()
     this.projector = new THREE.Projector();
     
-    this.container = document.getElementById("container")
+    $("body").append("<div id=\"_ace3_container\" style=\"width: 1200px; height: 700px; background-color: black;\"> </div>");
+
+    this.container = document.getElementById("_ace3_container")
 
     var offset = $(this.container).offset()
     var w = $(this.container).width()
@@ -100,16 +102,16 @@ ACE3 = function() {
     });
     
 
-    $("body").mousedown(function(e) {
+    $(this.container).mousedown(function(e) {
         self.eventManager.mouseStatus = "DOWN"
     });
-    $("body").mouseup(function(e) {
+    $(this.container).mouseup(function(e) {
         self.eventManager.mouseStatus = "UP"
     });
    
     // TODO : for now mouse move is a time consuming operation.
     // He has to be calculated in some other way (Apparently this is IMPOSSIBLE)
-    $("body").mousemove(function (e) {
+    $(this.container).mousemove(function (e) {
         e.preventDefault()
         //var offset = $(this.container).offset();
         _ace3.screen.x = e.clientX
@@ -138,8 +140,8 @@ ACE3.prototype = {
         var offset = $(this.container).offset();
         var relposx = this.screen.x - offset.left
         var relposy = this.screen.y - offset.top
-        var glx = ( relposx / self.container.offsetWidth ) * 2 - 1;
-	    var gly = - ( relposy / self.container.offsetHeight ) * 2 + 1;
+        var glx = ( relposx / this.container.offsetWidth ) * 2 - 1;
+	    var gly = - ( relposy / this.container.offsetHeight ) * 2 + 1;
         return {x: glx, y: gly}
     },
     
@@ -154,8 +156,7 @@ ACE3.prototype = {
         }
         this.camera.run()
         this.renderer.render(this.scene, this.camera.cameraObj)
-        this.eventManager.resetUpKeys()
-        this.eventManager.resetMouseReleased()
+        this.eventManager.standardReset()
         //setTimeout("_ace3.run()",10)
     },
     

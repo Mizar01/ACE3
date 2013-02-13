@@ -7,6 +7,7 @@ ACE3.EventManager = function() {
     //TODO : event manager should store an array of current pressed keys.
     this.key = {} //Associative array code/status
     this.mouseStatus = "" //DOWN,UP
+    this.ignoreNextMouseEvent = false
 
     this.keyCodes = {
         // some labeled key codes
@@ -54,10 +55,30 @@ ACE3.EventManager.prototype = {
     },
     
     mousePressed: function() {
-        return this.mouseStatus == 'DOWN'
+        return !this.ignoreNextMouseEvent && this.mouseStatus == 'DOWN'
     },
     
     mouseReleased: function() {
-        return this.mouseStatus == "UP"
-    },   
+        return !this.ignoreNextMouseEvent && this.mouseStatus == "UP"
+    }, 
+    forceResetMouse: function() {
+        this.mouseStatus = ""
+    },
+    // *
+    // * EventManager manages only non HTML elements, so onclick could activate
+    // * some html element and we don't want that the 3D environment could be affected
+    // * by the event. This flag must be removed in the end of ace3 main loop.
+    
+    // ignoreMouseEvent: function() {
+    //     this.ignoreNextMouseEvent = true
+    // },
+    /**
+    * This resets all default imposed during a single cycle. It is at 99% mandatory 
+    * to do it every loop of the game.
+    */
+    standardReset: function() {
+        this.resetUpKeys()
+        this.resetMouseReleased()
+        this.ignoreNextMouseEvent = false
+    }
 }

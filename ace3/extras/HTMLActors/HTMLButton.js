@@ -29,7 +29,7 @@ ACE3.HTMLButton = function(label, x, y, width, height, onclick, zindex, textColo
 ACE3.HTMLButton.extends(ACE3.ActorHTML, "ACE3.HTMLButton")
 
 ACE3.HTMLButton.prototype.buildContent = function() {
-    var s = "<div id='" + this.id + "' onclick=\"" + this.onclick + "\" > " + this.label + " </div>"
+    var s = "<div id='" + this.id + "' " + this.interceptAttrs + " > " + this.label + " </div>"
     // console.log(s)
     return s 
 }

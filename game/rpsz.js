@@ -133,10 +133,10 @@ function game_init_map(map, demoMode) {
     t2units.run = function() { this.setValue(players[1].unitCount) }    
     gameManager.registerActor(t2units)
 
-    // var tbpos = ace3.getPercPos(50, 50);
-    // var testInGameButton = new ACE3.HTMLButton("TEST BTN", tbpos.x, tbpos.y, 
-    //     40, 40, "console.log('Hellooooo!!!!');", 10, "orange", "green");
-    // gameManager.registerActor(testInGameButton)
+    var tbpos = ace3.getPercPos(50, 50);
+    var testInGameButton = new ACE3.HTMLButton("TEST BTN", tbpos.x, tbpos.y, 
+        40, 40, function() {console.log('Hellooooo!!!!');}, 10, "orange", "green");
+    gameManager.registerActor(testInGameButton)
     
 
 
