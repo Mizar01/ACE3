@@ -133,6 +133,12 @@ function game_init_map(map, demoMode) {
     t2units.run = function() { this.setValue(players[1].unitCount) }    
     gameManager.registerActor(t2units)
 
+    // var tbpos = ace3.getPercPos(50, 50);
+    // var testInGameButton = new ACE3.HTMLButton("TEST BTN", tbpos.x, tbpos.y, 
+    //     40, 40, "console.log('Hellooooo!!!!');", 10, "orange", "green");
+    // gameManager.registerActor(testInGameButton)
+    
+
 
 
 
@@ -217,9 +223,9 @@ function menu_define() {
     var box = new ACE3.HTMLBox("Star Drift <br/> drones gone mad", "", mOffset.x, mOffset.y, bw, bh, zIndex, fgColor, bgColor)
     box.addStyle(standardBoxStyle);
     var initY = box.y + 65
-    var playButton = new ACE3.HTMLButton("NEW GAME", butX, initY + 40, butW, 20, "game_choose()", zIndex + 1, fgColor, bgColor)
+    var playButton = new ACE3.HTMLButton("NEW GAME", butX, initY + 40, butW, 20, function(){game_choose()}, zIndex + 1, fgColor, bgColor)
     playButton.css(standardButtonStyle)
-    var demoButton = new ACE3.HTMLButton("DEMO", butX, initY + 80, butW, 20, "game_demo()", zIndex + 1, fgColor, bgColor)
+    var demoButton = new ACE3.HTMLButton("DEMO", butX, initY + 80, butW, 20, function(){game_demo()}, zIndex + 1, fgColor, bgColor)
     demoButton.css(standardButtonStyle)
     var tutorialButton = new ACE3.HTMLButton("Tutorial(TODO)", butX, initY + 120, butW, 20, "", zIndex + 1, fgColor, bgColor)
     tutorialButton.css(standardButtonStyle)
@@ -227,7 +233,7 @@ function menu_define() {
     optionButton.css(standardButtonStyle)
     var  aboutButton= new ACE3.HTMLButton("About(TODO)", butX, initY + 200, butW, 20, "", zIndex + 1, fgColor, bgColor)
     aboutButton.css(standardButtonStyle)    
-    var resumeButton = new ACE3.HTMLButton("RESUME", butX, initY + 240, butW, 20, "game_play()", zIndex + 1, "black", "yellow")
+    var resumeButton = new ACE3.HTMLButton("RESUME", butX, initY + 240, butW, 20, function(){game_play()}, zIndex + 1, "black", "yellow")
     resumeButton.css(standardButtonStyle)
     menuManager.registerActor(box)
     menuManager.registerActor(playButton)
@@ -257,12 +263,15 @@ function menu_define() {
     var mappedMaps = ["tick-tack-toe", "Flatlandia", "longway"]
     for (var i in mappedMaps) {
         var m = mappedMaps[i]
-        var link = "game_play(\"" + m + "\")"
-        var mButton = new ACE3.HTMLButton(m, butX, box.y + 40 + i * 40, butW, 20, link, zIndex + 1, fgColor, bgColor)
+        var mButton = new ACE3.HTMLButton(m, butX, box.y + 40 + i * 40, butW, 20, null, zIndex + 1, fgColor, bgColor)
         mButton.addStyle(standardButtonStyle)
+        mButton.mapLink = m
+        var link = function(){game_play(this.mapLink)}
+        mButton.onClickFunction = link
+        console.log(mButton)
         chooseMapMenuManager.registerActor(mButton)
     }
-    var  returnButton= new ACE3.HTMLButton("Cancel", butX, box.y + 200, butW, 20, "game_pause()", zIndex + 1, fgColor, "red")
+    var  returnButton= new ACE3.HTMLButton("Cancel", butX, box.y + 200, butW, 20, function(){game_pause()}, zIndex + 1, fgColor, "red")
     returnButton.addStyle(standardButtonStyle)    
     chooseMapMenuManager.registerActor(returnButton)    
     ace3.actorManagerSet.push(chooseMapMenuManager)    

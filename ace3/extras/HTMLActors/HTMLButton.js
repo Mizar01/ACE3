@@ -7,7 +7,7 @@ ACE3.HTMLButton = function(label, x, y, width, height, onclick, zindex, textColo
     this.label = label
     this.zindex = zindex
     this.center = { x: ( width + x) / 2, y: (height + y) / 2}
-    this.onclick = onclick
+    this.onClickFunction = onclick
     this.textColor = textColor || "white"
     this.backColor = backColor || "blue"
 
@@ -29,5 +29,7 @@ ACE3.HTMLButton = function(label, x, y, width, height, onclick, zindex, textColo
 ACE3.HTMLButton.extends(ACE3.ActorHTML, "ACE3.HTMLButton")
 
 ACE3.HTMLButton.prototype.buildContent = function() {
-    return "<div id='" + this.id + "' onclick='" + this.onclick + "' > " + this.label + " </div>" 
+    var s = "<div id='" + this.id + "' onclick=\"" + this.onclick + "\" > " + this.label + " </div>"
+    // console.log(s)
+    return s 
 }

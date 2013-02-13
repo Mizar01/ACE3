@@ -195,6 +195,20 @@ ACE3.prototype = {
         this.vpOffset = new THREE.Vector2(offset.left, offset.top) //size vector of the viewport
         this.vpSize = new THREE.Vector2(w, h)  // size vector of the viewport
     },
+    /**
+    * Finds the actor scanning through all the managers.
+    * TODO : possible improvements: scan also in subchildren, actually it scans only for
+    *        direct children of a manager.
+    */
+    findActorById: function(actorId) {
+        for (idm in this.actorManagerSet) {
+            var a = this.actorManagerSet[idm].findActorById(actorId)
+            if (a != null) {
+                return a
+            }
+        }
+        return null
+    },
 
 
 

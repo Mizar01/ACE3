@@ -98,4 +98,8 @@ ACE3.ActorManager.prototype = {
     unregisterLogic: function(logicActor) {
         // TODO
     },
+
+    findActorById: function(actorId) {
+        return this.actors["" + actorId]
+    },
 }

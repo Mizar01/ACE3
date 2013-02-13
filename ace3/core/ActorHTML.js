@@ -4,7 +4,16 @@ ACE3.ActorHTML = function() {
     this.baseCss = ""
     this.baseClasses = ""
     this.content = ""
+    this.clickReset = false // if true, the click on this button is the only event fired, because 
+                            // the mouse status will be reset. So it's not going to generate 
+                            // mess with undeground pickable objects.
+                            // TODO : I have yet to think how to implement this.
     this.id = this.getType().replace(/\./gi, "_")  + THREE.Math.randInt(0,999) + THREE.Math.randInt(0,999) //id of the element
+
+    this.onClickFunction = null
+
+    this.onclick = "_ace3.findActorById('" + this.id + "').click()"
+
 }
 
 ACE3.ActorHTML.extends(ACE3.Actor, "ACE3.ActorHTML")
@@ -67,4 +76,8 @@ ACE3.ActorHTML.prototype.addClass = function(className) {
 }
 ACE3.ActorHTML.prototype.removeClass = function(className) {
     $("#" + this.id).removeClass(className)
+}
+
+ACE3.ActorHTML.prototype.click = function(className) {
+    this.onClickFunction()
 }
