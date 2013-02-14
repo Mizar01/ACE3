@@ -8,6 +8,7 @@ function Player(name,controller) {
     this.unitCount = 0
     this.maxUnits = 12
     this.sectorCount = 0
+    this.resources = 0
     //this.units = new Array()
     /**
      * Adds a unit actor to the player and register it to the gameManager

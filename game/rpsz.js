@@ -2,6 +2,7 @@
 
 var ace3 = null
 var players = [] //associative array for players
+var humanPlayer = null
 var test_logic = null
 var gameManager = null // shortcut to ace3.defaultActorManager
 var menuManager = null // shortcut to another ActorManager for menus
@@ -59,10 +60,13 @@ function game_init_map(map, demoMode) {
     //Player init
     players = []
     if (!demoMode) {
-        p1 = new Player("mizar", ACE3.Constants.CONTROLLER_HUMAN)
+        var p1 = new Player("mizar", ACE3.Constants.CONTROLLER_HUMAN)
+        humanPlayer = p1
     }else {
-        p1 = new Player("mizar", ACE3.Constants.CONTROLLER_CPU)
+        var p1 = new Player("mizar", ACE3.Constants.CONTROLLER_CPU)
+        humanPlayer = null
     }
+
     p1.color = 0x0000ff
     p2 = new Player ("cpu", ACE3.Constants.CONTROLLER_CPU)
     p2.color = 0xff0000
@@ -117,6 +121,8 @@ function game_init_map(map, demoMode) {
     shakeCameraLogic = new ShakeCameraLogic()
     gameManager.registerLogic(shakeCameraLogic)
     gameManager.registerLogic(new ESCPauseGameLogic())
+    gameManager.registerLogic(new HUDAndResourcesLogic())
+
 
     //TEST SKYBOX
     //var skyBox = new ACE3.SkyBox("media/sb1-")
@@ -127,16 +133,28 @@ function game_init_map(map, demoMode) {
 
     //Adding some display values
     var t1units = new ACE3.DisplayValue("Team " + players[0].name, 0, ace3.getPercPos(70, 95))
-    t1units.run = function() { this.setValue(players[0].unitCount) }
+    t1units.baseCss.color = "black"
+    t1units.valueFunction = function() { return players[0].unitCount; }
     gameManager.registerActor(t1units)
     var t2units = new ACE3.DisplayValue("Team " + players[1].name, 0, ace3.getPercPos(85, 95))
-    t2units.run = function() { this.setValue(players[1].unitCount) }    
+    t2units.baseCss.color = "black"
+    t2units.valueFunction = function() { return players[1].unitCount; }    
     gameManager.registerActor(t2units)
 
-    var tbpos = ace3.getPercPos(50, 50);
-    var testInGameButton = new ACE3.HTMLButton("TEST BTN", tbpos.x, tbpos.y, 
-        40, 40, function() {console.log('Hellooooo!!!!');}, 10, "orange", "green");
-    gameManager.registerActor(testInGameButton)
+    if (humanPlayer) {
+        var t1res = new ACE3.DisplayValue("<img src='media/particle.png'/>", 0, ace3.getPercPos(10, 95))
+        t1res.separator = ""
+        t1res.baseCss.backgroundColor = "transparent"
+        t1res.valueFunction = function() {return humanPlayer.resources}
+        gameManager.registerActor(t1res)
+    }
+
+    // var t1
+
+    // var tbpos = ace3.getPercPos(50, 50);
+    // var testInGameButton = new ACE3.HTMLButton("TEST BTN", tbpos.x, tbpos.y, 
+    //     40, 40, function() {console.log('Hellooooo!!!!');}, 10, "orange", "green");
+    // gameManager.registerActor(testInGameButton)
     
 
 
@@ -204,10 +222,12 @@ function menu_define() {
     var h = cel.height()
     var center = { x: (w + x) / 2, y: (h + y) / 2}
 
+    // TODO : those two following variables are not effective. Apply them
+    // to the object after init() or use button.baseCss.prop = value  to set them.
     standardBoxStyle = "padding: 5px; border: 5px solid white;"
     standardButtonStyle = {
                             padding: "2px",
-                            border: "3px solid white",
+                            border: "3px solid red",
                           }
     bgColor = "black"
     fgColor = "white"

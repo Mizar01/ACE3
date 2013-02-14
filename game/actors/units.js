@@ -15,6 +15,7 @@ Unit = function(owner) {
     this.cooldown = 50
     this.currentCooldown = 0
     this.speed = 0.02 //defaul 0.02
+    this.level = 1
     this.selected = false
     this.hlSelect = new HLSelect() //the actor hilighter for this unit
     this.hlEnemy = new HLEnemy()  // the actor to hilight this enemy as a target
