@@ -16,6 +16,7 @@ Unit = function(owner) {
     this.currentCooldown = 0
     this.speed = 0.02 //defaul 0.02
     this.level = 1
+    this.nextUpgradeCost = 20
     this.selected = false
     this.hlSelect = new HLSelect() //the actor hilighter for this unit
     this.hlEnemy = new HLEnemy()  // the actor to hilight this enemy as a target
@@ -145,6 +146,31 @@ Unit.prototype.run = function() {
 
 
 }
+
+Unit.prototype.upgrade = function() {
+    this.level += 1
+    this.speed *= (1 + this.level / 40)
+    this.damage *= (1 + this.level/ 100)
+    this.life = 10 + this.level * 4
+    this.cooldown = THREE.Math.clamp(this.cooldown - this.level * 2, 25)
+    //console.log("The unit has reached level " + this.level)
+
+    this.owner.resources -= this.nextUpgradeCost
+
+    this.nextUpgradeCost = this.calcUpgradeCost()
+    console.log(this.nextUpgradeCost)
+}
+
+Unit.prototype.canUpgrade = function() {
+    if (this.level < 10 && this.owner.resources > this.nextUpgradeCost) {
+        return true
+    }
+}
+
+Unit.prototype.calcUpgradeCost = function() {
+    return Math.round(Math.pow(this.level, 2) * 10) 
+}
+
 
 Unit.prototype.runPlayerAI = function() {
     if (GameUtils.isCPU(this)) {

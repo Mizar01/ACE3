@@ -91,6 +91,8 @@ ACE3.ActorHTML.prototype.removeClass = function(className) {
     $("#" + this.id).removeClass(className)
 }
 
+
+// TODO maybe the parameter is not neededs
 ACE3.ActorHTML.prototype.click = function(className) {
     // if (this.clickReset) {
     //     // _ace3.eventManager.resetMousePressed()

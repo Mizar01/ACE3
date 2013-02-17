@@ -24,6 +24,8 @@ var game_started = false
 
 var shakeCameraLogic = null
 
+var selectManager = null
+
 
 function game_init() {
     ace3 = new ACE3()
@@ -112,9 +114,11 @@ function game_init_map(map, demoMode) {
 
     if (!demoMode) {
         gameManager.registerLogic(new CameraLogic())
-        gameManager.registerLogic(new MultiSelectTarget_NoSectors())
+        selectManager = new MultiSelectTarget_NoSectors()
+        gameManager.registerLogic(selectManager)
         //gameManager.registerLogic(new ControlPlayerVictoryLogic())
     }else {
+        selectManager = null
         gameManager.registerLogic(new CameraDemoLogic())
     }
 
@@ -132,26 +136,43 @@ function game_init_map(map, demoMode) {
     gameManager.registerActor(stars)
 
     //Adding some display values
-    var t1units = new ACE3.DisplayValue("Team " + players[0].name, 0, ace3.getPercPos(70, 95))
+    var t1units = new ACE3.DisplayValue("Team " + players[0].name, 0, ace3.getFromRatio(70, 95))
     t1units.baseCss.color = "black"
     t1units.valueFunction = function() { return players[0].unitCount; }
     gameManager.registerActor(t1units)
-    var t2units = new ACE3.DisplayValue("Team " + players[1].name, 0, ace3.getPercPos(85, 95))
+    var t2units = new ACE3.DisplayValue("Team " + players[1].name, 0, ace3.getFromRatio(85, 95))
     t2units.baseCss.color = "black"
     t2units.valueFunction = function() { return players[1].unitCount; }    
     gameManager.registerActor(t2units)
 
     if (humanPlayer) {
-        var t1res = new ACE3.DisplayValue("<img src='media/particle.png'/>", 0, ace3.getPercPos(10, 95))
+
+        // human player resource info
+        var t1res = new ACE3.DisplayValue("<img src='media/particle.png' style='vertical-align: middle;'/>",
+                                             0, ace3.getFromRatio(10, 5))
         t1res.separator = ""
         t1res.baseCss.backgroundColor = "transparent"
         t1res.valueFunction = function() {return humanPlayer.resources}
         gameManager.registerActor(t1res)
+
+
+        // upgrade unit button
+        var p = ace3.getFromRatio(15, 5)
+
+
+        define_game_buttons()
+
+    
+
+
+
+
+
     }
 
     // var t1
 
-    // var tbpos = ace3.getPercPos(50, 50);
+    // var tbpos = ace3.getFromRatio(50, 50);
     // var testInGameButton = new ACE3.HTMLButton("TEST BTN", tbpos.x, tbpos.y, 
     //     40, 40, function() {console.log('Hellooooo!!!!');}, 10, "orange", "green");
     // gameManager.registerActor(testInGameButton)
@@ -242,7 +263,7 @@ function menu_define() {
     var mOffset = { x: center.x - bw / 2, y: center.y - bh / 2}
     var box = new ACE3.HTMLBox("Star Drift <br/> drones gone mad", "", mOffset.x, mOffset.y, bw, bh, zIndex, fgColor, bgColor)
     box.addStyle(standardBoxStyle);
-    var initY = box.y + 65
+    var initY = box.y + 45
     var playButton = new ACE3.HTMLButton("NEW GAME", butX, initY + 40, butW, 20, function(){game_choose()}, zIndex + 1, fgColor, bgColor)
     playButton.css(standardButtonStyle)
     var demoButton = new ACE3.HTMLButton("DEMO", butX, initY + 80, butW, 20, function(){game_demo()}, zIndex + 1, fgColor, bgColor)
@@ -288,7 +309,7 @@ function menu_define() {
         mButton.mapLink = m
         var link = function(){game_play(this.mapLink)}
         mButton.onClickFunction = link
-        console.log(mButton)
+        // console.log(mButton)
         chooseMapMenuManager.registerActor(mButton)
     }
     var  returnButton= new ACE3.HTMLButton("Cancel", butX, box.y + 200, butW, 20, function(){game_pause()}, zIndex + 1, fgColor, "red")

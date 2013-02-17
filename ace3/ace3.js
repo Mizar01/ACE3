@@ -39,6 +39,16 @@ if (!window.requestAnimationFrame) {
                                 });
 }
 
+// Utility to disables text selection, is annoying for the game
+(function($){
+    $.fn.disableSelection = function() {
+        return this
+                 .attr('unselectable', 'on')
+                 .css('user-select', 'none')
+                 .on('selectstart', false);
+    };
+})(jQuery);
+
 
 var _ace3 = null
 
@@ -54,6 +64,8 @@ ACE3 = function() {
     this.projector = new THREE.Projector();
     
     $("body").append("<div id=\"_ace3_container\" style=\"width: 1200px; height: 700px; background-color: black;\"> </div>");
+
+    $("body").disableSelection()
 
     this.container = document.getElementById("_ace3_container")
 
@@ -179,11 +191,11 @@ ACE3.prototype = {
     },
 
     /**
-    * Get the position inside the container given the percentage position
+    * Get the position, value based on the container size, given the percentage
     * The recalculation is done everytime we have a refresh
     * Return a THREE.Vector2 
     */
-    getPercPos: function(percX, percY) {
+    getFromRatio: function(percX, percY) {
         var x = this.vpOffset.x + this.vpSize.x/100 * percX
         var y = this.vpOffset.y + this.vpSize.y/100 * percY
         return new THREE.Vector2(x, y) 
