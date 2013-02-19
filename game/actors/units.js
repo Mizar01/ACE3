@@ -16,6 +16,7 @@ Unit = function(owner) {
     this.currentCooldown = 0
     this.speed = 0.02 //defaul 0.02
     this.level = 1
+    this.maxLevel = 10
     this.nextUpgradeCost = 20
     this.selected = false
     this.hlSelect = new HLSelect() //the actor hilighter for this unit
@@ -162,9 +163,17 @@ Unit.prototype.upgrade = function() {
 }
 
 Unit.prototype.canUpgrade = function() {
-    if (this.level < 10 && this.owner.resources > this.nextUpgradeCost) {
+    if (this.level < this.maxLevel && this.owner.resources > this.nextUpgradeCost) {
         return true
     }
+}
+
+Unit.prototype.getInfoForUpgrade = function() {
+    if (this.level >= this.maxLevel) {
+        return "lvl " + this.level + "(MAX)"
+    }
+    var s = "lvl " + this.level + ". Upgrade Cost: " + this.nextUpgradeCost
+    return s
 }
 
 Unit.prototype.calcUpgradeCost = function() {

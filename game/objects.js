@@ -27,6 +27,27 @@ function Player(name,controller) {
     this.getSpawnCooldown = function() {
         return 500 + this.unitCount * 50 + this.sectorCount * 20
     }
+
+    this.satelliteLaunch = function() {
+        var tsArray = []
+        //find enemy tower sectors
+        for (var i in terrain.actorChildren) {
+            var s = terrain.actorChildren[i]
+            if (s.getType() == 'TowerSector') {
+                tsArray.push(s)
+            }
+        }
+        if (tsArray.length < 1) {
+            // no enemy towers. No shooting.
+            return false
+        }else {
+            //choose a random enemyTower
+            var rti = THREE.Math.randInt(0, tsArray.length - 1)
+            var target = tsArray[rti]
+            var ss = new SatelliteShot(this, target)
+            gameManager.registerActor(ss)
+        }
+    }
 }
 
 

@@ -53,3 +53,60 @@ Shot.prototype.followActor = function(actor) {
     this.obj.translateZ(this.speed)
 }
 
+/**
+* The satellite shot is directly owned by player.
+*/
+SatelliteShot = function(owner, target) {
+    ACE3.Actor3D.call(this)
+    this.owner = owner
+    this.ownerName = owner.name 
+    this.target = target
+    this.obj = ACE3.Builder.cube2(.1, .1, .3, 0x00ff00)
+    var tp = terrain.obj.position
+    this.obj.position = new THREE.Vector3(tp.x, tp.y + 50, tp.z)
+    this.obj.lookAt(target.obj.position)
+    this.collisionDistance = 0.5
+    this.speed = 0.5
+}
+SatelliteShot.extends(ACE3.Actor3D, "SatelliteShot")
+
+SatelliteShot.prototype.run = function() {
+    if (this.target == null || this.target.alive == false) {
+        this.setForRemoval()
+        return
+    }
+    if (this.target.owner != null && this.target.owner.name == this.owner.name) {
+        this.setForRemoval()
+        return
+    }
+
+    var d = this.obj.position.distanceTo(this.target)
+    if (d < this.collisionDistance) {
+        this.damageTarget()
+        this.target = null
+        this.setForRemoval()
+    }else {
+        this.followActor(this.target)
+    }
+}
+
+SatelliteShot.prototype.damageTarget = function() {
+    var d = this.damage
+    var dinc = + 2
+    var t1 = this.ownerType
+    var t2 = this.target.getType()
+    if (t1 == t2) {
+        dinc = 0
+    }else if ((t1 == "Rock" && t2 == "Paper") ||
+        (t1 == "Paper" && t2 == "Scissors") ||
+        (t1 == "Scissors" && t2 == "Rock")) {
+        dinc = - 2
+    }
+    this.target.getDamage(this.damage + dinc)
+    // this.target.life -= (this.damage + dinc)       
+}
+SatelliteShot.prototype.followActor = function(actor) {
+    this.obj.lookAt(actor.obj.position)
+    this.obj.translateZ(this.speed)
+}
+

@@ -26,6 +26,8 @@ var shakeCameraLogic = null
 
 var selectManager = null
 
+// var displayInfo = null //actor that shows dynamic info on screen during game.
+
 
 function game_init() {
     ace3 = new ACE3()
@@ -149,7 +151,7 @@ function game_init_map(map, demoMode) {
 
         // human player resource info
         var t1res = new ACE3.DisplayValue("<img src='media/particle.png' style='vertical-align: middle;'/>",
-                                             0, ace3.getFromRatio(10, 5))
+                                             0, ace3.getFromRatio(10, 2))
         t1res.separator = ""
         t1res.baseCss.backgroundColor = "transparent"
         t1res.valueFunction = function() {return humanPlayer.resources}
@@ -160,7 +162,7 @@ function game_init_map(map, demoMode) {
         var p = ace3.getFromRatio(15, 5)
 
 
-        define_game_buttons()
+        define_HUD()
 
     
 

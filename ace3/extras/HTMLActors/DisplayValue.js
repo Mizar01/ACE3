@@ -47,5 +47,7 @@ ACE3.DisplayValue.prototype.setValue = function(value) {
 }
 
 ACE3.DisplayValue.prototype.run = function() {
-    this.setValue(this.valueFunction())
+  if (this.valueFunction != null) {
+      this.setValue(this.valueFunction())
+  }
 }
