@@ -1,89 +1,10 @@
 /**
-* This is the class for the default action button in the game. The
-* run() function is managing some situations to decide whether to 
-* display itself or to display grayed out (disabled), or to not display at all.
-*/
-
-DefaultGameButton = function(label, vec2pos, vec2size, onclick) {
-	ACE3.HTMLButton.call(this, label, vec2pos.x, vec2pos.y, vec2size.x, vec2size.y, 
-		onclick, 10, "gold", "black")
-	this.baseCss.fontSize = "0.8em"
-	this.hidden = false
-	this.disabled = false
-	//this.onmouseover = "onmouseover=\"_ace3.findActorById('" + this.id + "').mouseover()\""
-	this.onMouseOverFunction = null
-	this.onMouseOutFunction = null
-	this.displayInfo = null //the reference to the displayInfoActor
-	this.displayInfoMessage = "" // the message to be pushed in the displayInfo Actor only when needed.
-}
-
-DefaultGameButton.extends(ACE3.HTMLButton, "DefaultGameButton")
-
-DefaultGameButton.prototype.init = function() {
-	this.getSuperClass().init.call(this)
-	$("#" + this.getId()).attr("onmouseover", "_ace3.findActorById('" + this.id + "').mouseover()")
-	$("#" + this.getId()).attr("onmouseout", "_ace3.findActorById('" + this.id + "').mouseout()")
-}
-
-DefaultGameButton.prototype.mouseover = function() {
-	this.displayInfo.setValue(this.displayInfoMessage)
-	this.displayInfo.show()
-}
-DefaultGameButton.prototype.mouseout = function() {
-	this.displayInfo.hide()
-}
-
-
-
-/**
-* This is the initLoop logic executed at every cycle, you should simply 
-* implement here some initialization you need at every loop of the game
-*/
-DefaultGameButton.prototype.initLoopLogic = function() {}
-/**
-* This function should set the 'hidden' property of the object with
-* a custom logic.
-*/
-DefaultGameButton.prototype.hiddenLogic = function () {}
-
-/**
-* This function should set the 'disable' property of the object with
-* a custom logic
-*/
-DefaultGameButton.prototype.disableLogic = function() {}
-
-DefaultGameButton.prototype.run = function() {
-	this.initLoopLogic()
-	this.hiddenLogic()
-	if (this.hidden) {
-		this.hide()
-	}else {
-		this.show()
-		this.disableLogic()
-		if (this.disabled) {
-			this.disable()
-		}else {
-			this.enable()
-		}
-	}
-}
-
-DefaultGameButton.prototype.enable = function() {           
-	this.disabled = false
-	this.css("color", "gold")
-    this.css("border", "3px solid green")
-}
-DefaultGameButton.prototype.disable = function() {
-    this.disabled = true
-    this.css("color", "gray")
-    this.css("border", "3px solid gray")
-}
-
-
-function define_HUD() {
+* Define the buttons and HUD for the human player.
+**/
+function define_player_HUD() {
 	var displayInfo = new ACE3.DisplayValue("", "", ace3.getFromRatio(15, 7))
 	displayInfo.separator = ""
-	gameManager.registerActor(displayInfo)
+	hudManager.registerActor(displayInfo)
 
 	var upgradeButton = new DefaultGameButton("UP", ace3.getFromRatio(15, 2),
 		                        new THREE.Vector2(25, 25), null)
@@ -97,10 +18,15 @@ function define_HUD() {
 			var u = us[0]
 	        if (GameUtils.isUnit(u)  && GameUtils.isHuman(u)) {
 				this.currentUnit = u
-				this.displayInfoMessage = u.getInfoForUpgrade()
 			}
 		}
 
+	}
+
+	upgradeButton.getInfoMessage = function() {
+		if (this.currentUnit) {
+			return this.currentUnit.getInfoForUpgrade()
+		}
 	}
 
 	upgradeButton.hiddenLogic = function() {
@@ -134,17 +60,21 @@ function define_HUD() {
 			var u = us[0]
 	        if (GameUtils.isUnit(u)  && GameUtils.isHuman(u)) {
 				this.currentUnit = u
-				this.displayInfoMessage = "Launches from satellite to disable a randomly chosed enemy tower"
 			}
 		}
 
 	}
-	satelliteShotButton.hiddenLogic = function() {
-		this.hidden = false
-	} 
+
+	satelliteShotButton.getInfoMessage = function() {
+		return humanPlayer.getInfoSatelliteShot()
+	}
+
 	satelliteShotButton.disableLogic = function() {
-		this.disabled = false
-		//TODO : implement some condition on resources...
+		if (!humanPlayer.canSatelliteShoot()) {
+			this.disabled = true
+		}else {
+			this.disabled = false
+		}
 	}
 
 	satelliteShotButton.onClickFunction = function() {
@@ -155,7 +85,7 @@ function define_HUD() {
 
 
 
-	gameManager.registerActor(upgradeButton)
-	gameManager.registerActor(satelliteShotButton)
+	hudManager.registerActor(upgradeButton)
+	hudManager.registerActor(satelliteShotButton)
 
 }

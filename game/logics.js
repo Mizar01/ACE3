@@ -14,7 +14,7 @@ HUDAndResourcesLogic.prototype.run = function() {
         for (var pi in players) {
             var p = players[pi]
             var r = p.resources
-            p.resources += p.sectorCount
+            p.resources += p.sectorCount * 10
         }
 
         this.lastTime = t

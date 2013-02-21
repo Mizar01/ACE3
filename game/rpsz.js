@@ -5,6 +5,7 @@ var players = [] //associative array for players
 var humanPlayer = null
 var test_logic = null
 var gameManager = null // shortcut to ace3.defaultActorManager
+var hudManager = null
 var menuManager = null // shortcut to another ActorManager for menus
 var chooseMapMenuManager = null 
 //var hlSelect = null //actor used to show selected items
@@ -26,6 +27,9 @@ var shakeCameraLogic = null
 
 var selectManager = null
 
+var optimizer = null // optimizer is a memory used throughout the entire game to store useful calculations like
+                     // special sectors and other stuff in order to avoid long loops through all the objects.
+
 // var displayInfo = null //actor that shows dynamic info on screen during game.
 
 
@@ -35,6 +39,7 @@ function game_init() {
     //ace3.setFog(0.02)
     mainThemeSound = $("#main_theme").get(0)
     mainThemeSound.play()
+    // optimizer = new Optimizer()
     gameManager = ace3.defaultActorManager
     //Adjust the pitch of the camera
     camera_reset_position()
@@ -148,28 +153,26 @@ function game_init_map(map, demoMode) {
     gameManager.registerActor(t2units)
 
     if (humanPlayer) {
-
+        hudManager = new ACE3.PureHTMLActorManager()
         // human player resource info
         var t1res = new ACE3.DisplayValue("<img src='media/particle.png' style='vertical-align: middle;'/>",
                                              0, ace3.getFromRatio(10, 2))
         t1res.separator = ""
         t1res.baseCss.backgroundColor = "transparent"
         t1res.valueFunction = function() {return humanPlayer.resources}
-        gameManager.registerActor(t1res)
+        hudManager.registerActor(t1res)
 
 
-        // upgrade unit button
-        var p = ace3.getFromRatio(15, 5)
+        //esc button
+        var escButton = new DefaultGameButton("PAUSE", ace3.getFromRatio(2, 2),
+                                new THREE.Vector2(60, 25), null)
+        escButton.onClickFunction = function() {game_pause()}
+        hudManager.registerActor(escButton)
 
 
-        define_HUD()
-
+        define_player_HUD()
+        ace3.actorManagerSet.push(hudManager)
     
-
-
-
-
-
     }
 
     // var t1
@@ -196,6 +199,9 @@ function game_destroy_map() {
         return  
 
     gameManager.reset()
+    if (hudManager) {
+        hudManager.reset()
+    }
     camera_reset_position()
     delete hlSelect
     delete hlEnemy
@@ -222,6 +228,9 @@ function game_play(map, demoMode) {
     menuManager.pause()
     chooseMapMenuManager.pause()
     gameManager.play()
+    if (hudManager) {
+        hudManager.play()
+    }
     game_started = true
 }
 
@@ -231,6 +240,9 @@ function game_demo() {
 
 
 function game_pause() {
+    if (hudManager) {
+        hudManager.pause()
+    }
     gameManager.pause()
     chooseMapMenuManager.pause()
     menuManager.play()
@@ -353,5 +365,9 @@ GameUtils = {
     isSectorToConquer: function(player, sector) {
         return sector != null && this.isValidSector(sector) && !sector.isOwnedByPlayer(player)
     },
+    isEnemySector: function(player, sector) {
+        return sector != null && this.isValidSector(sector) && sector.owner != null &&
+               sector.owner.name != player.name
+    }
 }
 

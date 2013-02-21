@@ -8,7 +8,10 @@ function Player(name,controller) {
     this.unitCount = 0
     this.maxUnits = 12
     this.sectorCount = 0
-    this.resources = 0
+    this.resources = 1000
+    this.satelliteShotLastTime = 0
+    this.satelliteShotCooldown = 10
+    this.satelliteShotCost = 50
     //this.units = new Array()
     /**
      * Adds a unit actor to the player and register it to the gameManager
@@ -28,12 +31,28 @@ function Player(name,controller) {
         return 500 + this.unitCount * 50 + this.sectorCount * 20
     }
 
+    this.getInfoSatelliteShot = function() {
+        return "Neutralizes rand tower. Cost: " + this.satelliteShotCost
+    }
+
+    this.canSatelliteShoot = function() {
+        var tt = ace3.time.frameTime
+        // console.log (tt - this.satelliteShotLastTime)
+        if (tt - this.satelliteShotLastTime < this.satelliteShotCooldown) {
+            return false
+        }
+        if (this.resources < this.satelliteShotCost) {
+            return false
+        }
+        return true
+    }
+
     this.satelliteLaunch = function() {
         var tsArray = []
         //find enemy tower sectors
         for (var i in terrain.actorChildren) {
             var s = terrain.actorChildren[i]
-            if (s.getType() == 'TowerSector') {
+            if (s.getType() == 'TowerSector' && GameUtils.isEnemySector(this, s)) {
                 tsArray.push(s)
             }
         }
@@ -46,6 +65,8 @@ function Player(name,controller) {
             var target = tsArray[rti]
             var ss = new SatelliteShot(this, target)
             gameManager.registerActor(ss)
+            this.resources -= this.satelliteShotCost
+            this.satelliteShotLastTime = ace3.time.frameTime
         }
     }
 }
@@ -103,7 +124,7 @@ function UnitSelector() {
         var units = new Array()        
         for (var ui in gameManager.actors) {
             var u = gameManager.actors[ui]
-            if (GameUtils.isHuman(u) && u.isBetweenCoords(sorting.v2Start, sorting.v2End)) {
+            if (GameUtils.isUnit(u) && GameUtils.isHuman(u) && u.isBetweenCoords(sorting.v2Start, sorting.v2End)) {
                 units.push(u)
             } 
         }
