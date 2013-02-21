@@ -9,7 +9,7 @@ function Player(name,controller) {
     this.maxUnits = 12
     this.sectorCount = 0
     this.resources = 1000
-    this.satelliteShotLastTime = 0
+    this.satelliteShotLastTime = -10
     this.satelliteShotCooldown = 10
     this.satelliteShotCost = 50
     //this.units = new Array()

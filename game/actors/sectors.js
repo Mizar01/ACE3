@@ -131,14 +131,22 @@ Sector.prototype.isOwnedByPlayer = function(player) {
         return true
 }
 
+/**
+* The setOwner can be used also to set to Null the owner.
+*/
 Sector.prototype.setOwner = function(player) {
     if (this.owner != null) {
         this.owner.sectorCount--
         this.owner = null
     }
-    this.owner = player
-    this.owner.sectorCount++
-    this.setColor(player.color)
+    if (player) {
+        this.owner = player
+        this.owner.sectorCount++
+        this.setColor(player.color)
+    }else {
+        //setting to neutral
+        this.setColor(0xaaaaaa)
+    }
     if (this.innerActor != undefined && this.innerActor.setOwner != undefined) {
         this.innerActor.setOwner(player)
     }

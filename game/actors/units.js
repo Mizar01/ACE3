@@ -252,6 +252,7 @@ Unit.prototype.getDamage = function(damage) {
     if (this.life < 0) {
         this.alive = false
         this.manager.registerActor(new ACE3.Explosion(this.obj.position.clone()))
+        shakeCameraLogic.activate()
     }
 }
 

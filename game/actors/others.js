@@ -57,20 +57,29 @@ Shot.prototype.followActor = function(actor) {
 * The satellite shot is directly owned by player.
 */
 SatelliteShot = function(owner, target) {
-    ACE3.Actor3D.call(this)
+    ACE3.ParticleActor.call(this, {
+            texture: 'media/particle2.png',
+            size: 5,
+            spread: 0,
+            particleCount: 5,
+        });
     this.owner = owner
     this.ownerName = owner.name 
     this.target = target
-    this.obj = ACE3.Builder.cube2(.1, .1, .3, 0x00ff00)
+
     var tp = terrain.obj.position
-    this.obj.position = new THREE.Vector3(tp.x, tp.y + 50, tp.z)
+    this.origin = new THREE.Vector3(tp.x, tp.y + 50, tp.z)
     this.obj.lookAt(target.obj.position)
     this.collisionDistance = 0.5
-    this.speed = 0.5
+    this.speed = 0.2
+    this.needReset = true
 }
-SatelliteShot.extends(ACE3.Actor3D, "SatelliteShot")
+SatelliteShot.extends(ACE3.ParticleActor, "SatelliteShot")
 
 SatelliteShot.prototype.run = function() {
+    if (this.needReset) {
+        this.reset()
+    }
     if (this.target == null || this.target.alive == false) {
         this.setForRemoval()
         return
@@ -80,7 +89,7 @@ SatelliteShot.prototype.run = function() {
         return
     }
 
-    var d = this.obj.position.distanceTo(this.target)
+    var d = this.obj.position.distanceTo(this.target.obj.position)
     if (d < this.collisionDistance) {
         this.damageTarget()
         this.target = null
@@ -91,22 +100,30 @@ SatelliteShot.prototype.run = function() {
 }
 
 SatelliteShot.prototype.damageTarget = function() {
-    var d = this.damage
-    var dinc = + 2
-    var t1 = this.ownerType
-    var t2 = this.target.getType()
-    if (t1 == t2) {
-        dinc = 0
-    }else if ((t1 == "Rock" && t2 == "Paper") ||
-        (t1 == "Paper" && t2 == "Scissors") ||
-        (t1 == "Scissors" && t2 == "Rock")) {
-        dinc = - 2
-    }
-    this.target.getDamage(this.damage + dinc)
-    // this.target.life -= (this.damage + dinc)       
+    if (this.target.getType() == 'TowerSector') {
+        this.manager.registerActor(new ACE3.Explosion(this.obj.position.clone()))
+        shakeCameraLogic.activate()
+        this.target.setOwner(null)
+    }  
 }
 SatelliteShot.prototype.followActor = function(actor) {
     this.obj.lookAt(actor.obj.position)
     this.obj.translateZ(this.speed)
 }
+
+SatelliteShot.prototype.reset = function(vec3Pos) {
+    //this.duration = 0.3
+    this.hide()
+    var vec3Pos = vec3Pos || this.origin
+    this.obj.position.copy(vec3Pos)
+    for (var pi = 0; pi < this.particleCount; pi++) {
+        var p = this.obj.geometry.vertices[pi]
+        p.copy(new THREE.Vector3(0, 0 , pi * 6))
+    }
+    this.origin.copy(vec3Pos)
+    this.refresh()
+    this.show()
+    this.needReset = false
+}
+
 
