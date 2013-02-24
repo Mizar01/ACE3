@@ -93,28 +93,54 @@ function game_init_map(map, demoMode) {
     var tsz = terrain.totalSizeZ
     var tcx = terrain.obj.position.x
     var tcz = terrain.obj.position.z
-    for (var i = 0;i < totalUnits; i++) {
-        var cp = p1
-        if (i % 2 != 0) {
-            cp = p2
+    if (demoMode) {
+        for (var i = 0;i < totalUnits; i++) {
+            var cp = p1
+            if (i % 2 != 0) {
+                cp = p2
+            }
+            var type = THREE.Math.randInt(0, 2)
+            var rx = THREE.Math.randInt(0, tsx) - (tsx / 2) - tcx
+            var rz = THREE.Math.randInt(0, tsz) - (tsz / 2) - tcz
+            rx = THREE.Math.clamp(rx, -tsx/2 + 0.5, tsx/2 - 0.5)
+            rz = THREE.Math.clamp(rz, -tsz/2 + 0.5, tsz/2 - 0.5)
+            obj = null
+            if (type == 0) obj = new Paper()
+            else if (type == 1) obj = new Rock()
+            else obj = new Scissors()
+            cp.addUnit(obj, rx, posy, rz)
         }
-        var type = THREE.Math.randInt(0, 2)
-        var rx = THREE.Math.randInt(0, tsx) - (tsx / 2) - tcx
-        var rz = THREE.Math.randInt(0, tsz) - (tsz / 2) - tcz
-        rx = THREE.Math.clamp(rx, -tsx/2 + 0.5, tsx/2 - 0.5)
-        rz = THREE.Math.clamp(rz, -tsz/2 + 0.5, tsz/2 - 0.5)
-        obj = null
-        if (type == 0) obj = new Paper()
-        else if (type == 1) obj = new Rock()
-        else obj = new Scissors()
-        // if (obj.getType() == "Scissors" && testSciss == null) {
-        //     //testSciss = obj
-        // }
-        cp.addUnit(obj, rx, posy, rz)
-        //make every unit pickable
-        if (!demoMode) {
-            obj.setPickable()
-        }
+    }else {
+        console.log(mapProps)
+        for (var i = 0;i < mapProps.spawns.length; i++) {
+            var values = mapProps.spawns[i].split(",")
+            console.log(values)
+            var cp = p1
+            if (values[0] == "p2") {
+                cp = p2
+            }
+            var type = values[1]
+            var rx = parseInt(values[2])
+            var rz = parseInt(values[3])
+            var sector = terrain.getSector(rx, rz)
+            rx = sector.obj.position.x
+            rz = sector.obj.position.z
+            //rx = THREE.Math.clamp(rx, -tsx/2 + 0.5, tsx/2 - 0.5)
+            //rz = THREE.Math.clamp(rz, -tsz/2 + 0.5, tsz/2 - 0.5)
+            obj = null
+            if (type == "paper") obj = new Paper()
+            else if (type == "rock") obj = new Rock()
+            else obj = new Scissors()
+            cp.addUnit(obj, rx, posy, rz)
+            //make every unit pickable
+            if (!demoMode) {
+                obj.setPickable()
+            }
+        }     
+    }
+
+    if (mapProps.cameraPos) {
+        ace3.camera.pivot.position.copy(mapProps.cameraPos)
     }
     
 
@@ -196,7 +222,17 @@ function game_init_map(map, demoMode) {
 function game_destroy_map() {
     
     if (terrain == null)  //I assume that if the terrain was not initialized, there's nothing to reset.
-        return  
+        return
+
+    //cleanFlagSectors
+    //TODO : the flag sectors will have to be simply managed by another manager.
+    var fsa = terrain.flagSectors
+    for (var i = 0; i < fsa.length; i++) {
+        var fs = fsa[i]
+        if (fs != null) {
+            ace3.scene.remove(fs.obj)
+        }
+    }  
 
     gameManager.reset()
     if (hudManager) {
@@ -315,7 +351,7 @@ function menu_define() {
     box = new ACE3.HTMLBox("Choose Map", "", mOffset.x, mOffset.y, bw, bh, zIndex, fgColor, bgColor)
     box.addStyle(standardBoxStyle);
     chooseMapMenuManager.registerActor(box)
-    var mappedMaps = ["tick-tack-toe", "Flatlandia", "longway"]
+    var mappedMaps = ["tick-tack-toe", "Flatlandia", "longway", "deepRoad"]
     for (var i in mappedMaps) {
         var m = mappedMaps[i]
         var mButton = new ACE3.HTMLButton(m, butX, box.y + 40 + i * 40, butW, 20, null, zIndex + 1, fgColor, bgColor)

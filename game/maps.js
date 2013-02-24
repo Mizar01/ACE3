@@ -4,6 +4,7 @@ function loadMap(mapName) {
 	map_sectorsY = null
 	map_string = null
 	game_spawn_units_array = null
+	camera_pos = null
 
 	switch (mapName) {
 	case "tutorial_map":
@@ -33,7 +34,37 @@ function loadMap(mapName) {
 		             "FT-TmFT-TF" + 
 		             "FT-TFmT-TF" + 
 		             "---m------"
+		game_spawn_units_array=new Array("p1,rock,0,0","p1,paper,0,1","p2,rock,9,2","p2,scissors,9,1");
 		break
+
+	case "deepRoad":
+		map_sectorsX = 4;
+		map_sectorsY = 20;
+		map_string = "-FF-" +
+		             "----" +
+		             "T--T" +
+		             "mTTm" +
+		             "----" +
+		             "m--m" +
+		             "----" +
+		             "----" +
+		             "mFFm" +
+		             "TmmT" +
+		             "TmmT" +
+		             "mFFm" +
+		             "----" +
+		             "----" +
+		             "m--m" +
+		             "----" +
+		             "mTTm" +
+		             "T--T" +
+		             "----" +
+		             "-FF-";
+		game_spawn_units_array=new Array("p2,rock,0,0","p2,paper,1,0","p1,rock,0,19","p1,scissors,1,19");
+		camera_pos = new THREE.Vector3(0,20, 50)
+		break		   
+
+
 	case "tick-tack-toe":
 		map_sectorsX=3;
 		map_sectorsY=3;
@@ -133,7 +164,7 @@ function loadMap(mapName) {
 		//none
 	}
 
-	return {mx: map_sectorsX, mz: map_sectorsY, map: map_string, spawns: game_spawn_units_array}
+	return {mx: map_sectorsX, mz: map_sectorsY, map: map_string, spawns: game_spawn_units_array, cameraPos: camera_pos,}
 
 	
 	
@@ -155,6 +186,7 @@ function initMapObjects(terrainActor, mapProps) {
 			var strpos = x + z * mx;
 			//sstest+=","+strpos;
 			var t = ms.substring(strpos, strpos+1).toUpperCase();
+			var isFlag = false
 			if (t == "M") {
 				var s = new MagneticSector(x, z, ssx, ssz)
 			}else if (t == "F") {
@@ -163,9 +195,17 @@ function initMapObjects(terrainActor, mapProps) {
 				var s = new TowerSector(terrainActor, x, z, ssx, ssz)
 			}else {
 				var s = new FlagSector(x, z, ssx, ssz)
+				isFlag = true
 				//continue
 			}
-            terrainActor.addActor(s)
+			if (isFlag) {
+				//because flag sector are not animated anymore, but
+				// i have to add their object to scene
+            	terrainActor.flagSectors.push(s)
+            	ace3.scene.add(s.obj)
+            }else {
+            	terrainActor.addActor(s)
+            }
             px = terrainActor.startX + x * ssx
             pz = terrainActor.startZ + z * ssz
             s.setPosition(px, 0, pz)

@@ -1,6 +1,7 @@
 Terrain = function(mapProps, sizex, sizez) {
     ACE3.Actor3D.call(this)
     this.sectors = ACE3.Math.matrix(mapProps.mx, mapProps.mz)
+    this.flagSectors = [] // this is the array for flag sectors. They are separate because they are not part of animation
     this.obj = new THREE.Object3D() //pivot
     //this.obj.rotation.x = -Math.PI/2
     //this.obj.position.y = -2

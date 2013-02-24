@@ -42,16 +42,20 @@ DefaultGameButton.prototype.mouseout = function() {
 */
 DefaultGameButton.prototype.initLoopLogic = function() {}
 /**
-* This function should set the 'hidden' property of the object with
-* a custom logic.
+* This function should return if the button is hidden from screen
+* You should override this function for your own logic on hiding the button
 */
-DefaultGameButton.prototype.hiddenLogic = function () {}
+DefaultGameButton.prototype.hiddenLogic = function () {
+	return false
+}
 
 /**
-* This function should set the 'disable' property of the object with
-* a custom logic
+* This function should return if the button is shown but disabled.
+* You should override this function for your own logic on disabling the button
 */
-DefaultGameButton.prototype.disableLogic = function() {}
+DefaultGameButton.prototype.disableLogic = function() {
+	return false
+}
 
 DefaultGameButton.prototype.run = function() {
 	if (this.displayInfo) {
@@ -63,13 +67,11 @@ DefaultGameButton.prototype.run = function() {
 	}
 
 	this.initLoopLogic()
-	this.hiddenLogic()
-	if (this.hidden) {
+	if (this.hiddenLogic()) {
 		this.hide()
 	}else {
 		this.show()
-		this.disableLogic()
-		if (this.disabled) {
+		if (this.disableLogic()) {
 			this.disable()
 		}else {
 			this.enable()
@@ -90,4 +92,10 @@ DefaultGameButton.prototype.disable = function() {
 
 DefaultGameButton.prototype.getInfoMessage = function() {
 	return "Override this method to get info when the mouse is over this button"
+}
+
+DefaultGameButton.prototype.click = function() {
+	if (!this.disabled) {
+		this.getSuperClass().click.call(this)
+	}
 }

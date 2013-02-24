@@ -30,23 +30,21 @@ function define_player_HUD() {
 	}
 
 	upgradeButton.hiddenLogic = function() {
-		this.hidden = false
 		if (this.currentUnit == null) {
-			this.hidden = true
+			return true
 		}
+		return false
 	} 
 	upgradeButton.disableLogic = function() {
 		var u = this.currentUnit
-		this.disabled = true
 		if (u.canUpgrade()) {
-			this.disabled = false
+			return false
 		}
+		return true
 	}
 
 	upgradeButton.onClickFunction = function() {
-		if (!this.disabled) {
 			this.currentUnit.upgrade()
-		}
 	}
 
 	var satelliteShotButton = new DefaultGameButton("SS", ace3.getFromRatio(25, 2),
@@ -54,7 +52,6 @@ function define_player_HUD() {
 	satelliteShotButton.displayInfo = displayInfo
 	satelliteShotButton.initLoopLogic = function() {
 		// store the current unit
-		this.currentUnit = null
 		var us = selectManager.unitSelector.selectedUnits
 		if (us.length == 1) {
 			var u = us[0]
@@ -71,21 +68,37 @@ function define_player_HUD() {
 
 	satelliteShotButton.disableLogic = function() {
 		if (!humanPlayer.canSatelliteShoot()) {
-			this.disabled = true
+			return true
 		}else {
-			this.disabled = false
+			return false
 		}
 	}
 
 	satelliteShotButton.onClickFunction = function() {
-		if (!this.disabled) {
 			humanPlayer.satelliteLaunch()
-		}
 	}
 
+
+	var increaseMaxUnits = new DefaultGameButton("+1", ace3.getFromRatio(35, 2),
+		                        new THREE.Vector2(25, 25), null)
+	increaseMaxUnits.displayInfo = displayInfo
+	increaseMaxUnits.getInfoMessage = function() {
+		return humanPlayer.getInfoIncreaseMaxUnits()
+	}
+	increaseMaxUnits.disableLogic = function() {
+		if (!humanPlayer.canIncreaseMaxUnits()) {
+			return true
+		}else {
+			return false
+		}
+	}
+	increaseMaxUnits.onClickFunction = function() {
+			humanPlayer.increaseMaxUnits()
+	}
 
 
 	hudManager.registerActor(upgradeButton)
 	hudManager.registerActor(satelliteShotButton)
+	hudManager.registerActor(increaseMaxUnits)
 
 }

@@ -16,7 +16,7 @@ Unit = function(owner) {
     this.currentCooldown = 0
     this.speed = 0.02 //defaul 0.02
     this.level = 1
-    this.maxLevel = 10
+    this.maxLevel = 3
     this.nextUpgradeCost = 20
     this.selected = false
     this.hlSelect = new HLSelect() //the actor hilighter for this unit
@@ -159,7 +159,10 @@ Unit.prototype.upgrade = function() {
     this.owner.resources -= this.nextUpgradeCost
 
     this.nextUpgradeCost = this.calcUpgradeCost()
-    console.log(this.nextUpgradeCost)
+
+    if (this.uniform.unitLevel) {
+        this.uniform.unitLevel.value = this.level
+    }
 }
 
 Unit.prototype.canUpgrade = function() {
@@ -346,6 +349,7 @@ Paper = function(owner) {
     var g1 = new THREE.CubeGeometry(0.5, 0.2, 1)
     var g2 = new THREE.CubeGeometry(0.5, 0.2, 1)
     this.uniform = ACE3.Utils.getStandardUniform()
+    this.uniform.unitLevel = { type: "i", value: this.level }
     this.r1 = ACE3.Utils.getStandardShaderMesh(this.uniform, 'vertexShaderGeneric', 'fragmentShaderRock', g1)
     this.r2 = ACE3.Utils.getStandardShaderMesh(this.uniform, 'vertexShaderGeneric', 'fragmentShaderRock', g2)
     this.pivot.add(this.r1)
@@ -376,7 +380,7 @@ Scissors = function(owner) {
     this.obj.add(this.pivotRot)
     this.legs = new Array()
     this.uniform = ACE3.Utils.getStandardUniform()
-
+    this.uniform.unitLevel = { type: "i", value: this.level }
     for (var i = 0; i <= 3; i++) {
         var yAngle = i * Math.PI/2
         var g = new THREE.CubeGeometry(0.2, 0.4, 0.15)
@@ -422,6 +426,7 @@ Rock = function(owner) {
     Unit.call(this)
     //this.obj = ACE3.Builder.sphere(0.5,0xff0000)
     this.uniform = ACE3.Utils.getStandardUniform()
+    this.uniform.unitLevel = { type: "i", value: this.level }
     var g = new THREE.SphereGeometry(0.5)
     this.obj = ACE3.Utils.getStandardShaderMesh(this.uniform, 'vertexShaderGeneric', 'fragmentShaderRock', g)
 }

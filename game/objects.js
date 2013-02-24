@@ -6,7 +6,9 @@ function Player(name,controller) {
     this.color = 0xff0000 //red default
     players[this.name] = this
     this.unitCount = 0
-    this.maxUnits = 12
+    this.maxUnits = 6
+    this.maxUnitsLimit = 12
+    this.increaseMaxUnitsLimitCost = this.maxUnits * 60 
     this.sectorCount = 0
     this.resources = 1000
     this.satelliteShotLastTime = -10
@@ -32,7 +34,7 @@ function Player(name,controller) {
     }
 
     this.getInfoSatelliteShot = function() {
-        return "Neutralizes rand tower. Cost: " + this.satelliteShotCost
+        return "Neutralizes random enemy tower. Cost: " + this.satelliteShotCost
     }
 
     this.canSatelliteShoot = function() {
@@ -67,6 +69,24 @@ function Player(name,controller) {
             gameManager.registerActor(ss)
             this.resources -= this.satelliteShotCost
             this.satelliteShotLastTime = ace3.time.frameTime
+        }
+    }
+
+    this.increaseMaxUnits = function() {
+        if (this.maxUnits < this.maxUnitsLimit) {
+            this.maxUnits++
+        }
+        this.resources -= this.increaseMaxUnitsLimitCost
+        this.increaseMaxUnitsLimitCost += this.maxUnits * 60
+    }
+    this.canIncreaseMaxUnits = function() {
+        return (this.maxUnits < this.maxUnitsLimit) && this.resources >= this.increaseMaxUnitsLimitCost
+    }
+    this.getInfoIncreaseMaxUnits = function() {
+        if (this.maxUnits < this.maxUnitsLimit) {
+            return "Increase max units to " + (this.maxUnits + 1) + ". Cost: " + this.increaseMaxUnitsLimitCost
+        }else {
+            return "Max units reached."
         }
     }
 }
