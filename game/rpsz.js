@@ -36,6 +36,7 @@ var optimizer = null // optimizer is a memory used throughout the entire game to
 function game_init() {
     ace3 = new ACE3()
     ace3.setBGColor(0x000000)
+    ace3.addPostProcessing("dots")
     //ace3.setFog(0.02)
     mainThemeSound = $("#main_theme").get(0)
     mainThemeSound.play()
@@ -111,10 +112,10 @@ function game_init_map(map, demoMode) {
             cp.addUnit(obj, rx, posy, rz)
         }
     }else {
-        console.log(mapProps)
+        // console.log(mapProps)
         for (var i = 0;i < mapProps.spawns.length; i++) {
             var values = mapProps.spawns[i].split(",")
-            console.log(values)
+            // console.log(values)
             var cp = p1
             if (values[0] == "p2") {
                 cp = p2
@@ -178,28 +179,26 @@ function game_init_map(map, demoMode) {
     t2units.valueFunction = function() { return players[1].unitCount; }    
     gameManager.registerActor(t2units)
 
+    //esc button
+    var escButton = new DefaultGameButton("PAUSE", ace3.getFromRatio(2, 2),
+                            new THREE.Vector2(60, 25), null)
+    escButton.onClickFunction = function() {game_pause()}
+    gameManager.registerActor(escButton)
+
     if (humanPlayer) {
-        hudManager = new ACE3.PureHTMLActorManager()
-        // human player resource info
-        var t1res = new ACE3.DisplayValue("<img src='media/particle.png' style='vertical-align: middle;'/>",
-                                             0, ace3.getFromRatio(10, 2))
-        t1res.separator = ""
-        t1res.baseCss.backgroundColor = "transparent"
-        t1res.valueFunction = function() {return humanPlayer.resources}
-        hudManager.registerActor(t1res)
-
-
-        //esc button
-        var escButton = new DefaultGameButton("PAUSE", ace3.getFromRatio(2, 2),
-                                new THREE.Vector2(60, 25), null)
-        escButton.onClickFunction = function() {game_pause()}
-        hudManager.registerActor(escButton)
-
-
         define_player_HUD()
         ace3.actorManagerSet.push(hudManager)
-    
     }
+
+    // test light 
+    // var directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    // directionalLight.position = ace3.camera.pivot.position;
+    // directionalLight.rotation.copy(ace3.camera.cameraObj.rotation)
+    // ace3.scene.add(directionalLight);
+
+    // ace3.scene.add( new THREE.AmbientLight( 0xffffff ) );
+
+
 
     // var t1
 
@@ -215,6 +214,7 @@ function game_init_map(map, demoMode) {
 
 
 }
+
 
 /**
 * Complete reset of the playing game.

@@ -80,6 +80,7 @@ ACE3 = function() {
     this.renderer.setClearColorHex(this.renderClearColor, 1)
     this.scene = null
     this.camera = null
+    this.composer = null
     //this.mouse = { x : 0, y : 0}
     this.screen = {x: 0, y: 0}
     
@@ -129,6 +130,7 @@ ACE3 = function() {
         _ace3.screen.x = e.clientX
         _ace3.screen.y = e.clientY
     });
+
 }
 
 ACE3.prototype = {
@@ -156,6 +158,29 @@ ACE3.prototype = {
 	    var gly = - ( relposy / this.container.offsetHeight ) * 2 + 1;
         return {x: glx, y: gly}
     },
+
+    addPostProcessing: function(type) { 
+        //TODO : actually type is not used
+        this.composer = new THREE.EffectComposer(this.renderer);
+        renderModel = new THREE.RenderPass(this.scene,this.camera.cameraObj);            
+        renderModel.renderToScreen = false; 
+        this.composer.addPass(renderModel); 
+        //var effect10 = new THREE.DotScreenPass(new THREE.Vector2(0,0), 0.5, 0.8); 
+        //effect10.renderToScreen = false; 
+        //this.composer.addPass(effect10);
+        // var effect14 = new THREE.ShaderPass(THREE.HueSaturationShader); 
+        // effect14.renderToScreen = true; 
+        // this.composer.addPass(effect14);       
+        //var effect15 = new THREE.ShaderPass(THREE.ColorifyShader); 
+        //effect15.renderToScreen = true; 
+        //this.composer.addPass(effect15);
+        var effect20 = new THREE.FilmPass();
+        effect20.uniforms.grayscale.value = 0
+        effect20.renderToScreen = true;
+        this.composer.addPass(effect20);
+        this.renderer.autoClear = false;
+
+    },
     
    
     run: function() {
@@ -167,7 +192,12 @@ ACE3.prototype = {
             this.actorManagerSet[id].run()
         }
         this.camera.run()
-        this.renderer.render(this.scene, this.camera.cameraObj)
+        if (this.composer) {
+            // this.renderer.clear()
+            this.composer.render(0.5)
+        }else {
+            this.renderer.render(this.scene, this.camera.cameraObj)
+        }
         this.eventManager.standardReset()
         //setTimeout("_ace3.run()",10)
     },

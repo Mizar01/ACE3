@@ -4,7 +4,7 @@
 function define_player_HUD() {
 	var displayInfo = new ACE3.DisplayValue("", "", ace3.getFromRatio(15, 7))
 	displayInfo.separator = ""
-	hudManager.registerActor(displayInfo)
+
 
 	var upgradeButton = new DefaultGameButton("UP", ace3.getFromRatio(15, 2),
 		                        new THREE.Vector2(25, 25), null)
@@ -96,7 +96,16 @@ function define_player_HUD() {
 			humanPlayer.increaseMaxUnits()
 	}
 
-
+    // human player resource info
+    var t1res = new ACE3.DisplayValue("<img src='media/particle.png' style='vertical-align: middle;'/>",
+                                         0, ace3.getFromRatio(10, 2))
+    t1res.separator = ""
+    t1res.baseCss.backgroundColor = "transparent"
+    t1res.valueFunction = function() {return humanPlayer.resources}
+    
+	hudManager = new ACE3.PureHTMLActorManager()
+	hudManager.registerActor(displayInfo)
+    hudManager.registerActor(t1res)
 	hudManager.registerActor(upgradeButton)
 	hudManager.registerActor(satelliteShotButton)
 	hudManager.registerActor(increaseMaxUnits)
