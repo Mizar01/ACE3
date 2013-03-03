@@ -366,7 +366,13 @@ Tower = function(sector) {
     this.cooldown = 90
     this.currentCooldown = 0
     this.height = 1.8
-    this.obj = ACE3.Builder.cylinder(0.4, this.height, 0xaaaaaa)
+    this.uniform = ACE3.Utils.getStandardUniform()
+    //this.uniform.color = { type: "v3", value: new THREE.Vector3(1.0, 0.0, 1.0) }
+    this.uniform.texture1 = {type: 't', value: THREE.ImageUtils.loadTexture( "media/tower.jpg" )}
+    var g = new THREE.CylinderGeometry(0.4, 0.5, this.height)    
+    this.obj = ACE3.Utils.getStandardShaderMesh(this.uniform, "vertexShaderGeneric", "fragmentShaderTower", g)
+    //this.obj.rotation.x = -Math.PI/2
+    //this.obj = ACE3.Builder.cylinder(0.4, this.height, 0xaaaaaa)
 
     //Alternate mesh
     // this.uniform = {
@@ -406,7 +412,8 @@ Tower.prototype.adjustPosition = function(sector) {
     }
 
 Tower.prototype.setColor = function(color) {
-        this.obj.material.color = new THREE.Color(color)
+        //this.obj.material.color = new THREE.Color(color)
+        this.uniform.color.value = ACE3.Utils.getVec3Color(color)
     }
 Tower.prototype.run = function() {
     this.refreshCooldown()
@@ -423,7 +430,7 @@ Tower.prototype.run = function() {
     }
 
     // normal behaviour
-    this.obj.rotation.y += 0.001
+    this.obj.rotation.y += 0.003
 
 }
 Tower.prototype.findNearestTarget = function() {

@@ -9,7 +9,7 @@ Unit = function(owner) {
     this.targetUnit = null
     this.targetSector = null
     this.range = 5
-    this.life = 10
+    this.life = 50
     this.maxLife = 100
     this.damage = 5
     this.cooldown = 50
@@ -150,10 +150,10 @@ Unit.prototype.run = function() {
 
 Unit.prototype.upgrade = function() {
     this.level += 1
-    this.speed *= (1 + this.level / 40)
-    this.damage *= (1 + this.level/ 100)
-    this.life = 10 + this.level * 4
-    this.cooldown = THREE.Math.clamp(this.cooldown - this.level * 2, 25)
+    this.speed *= (1 + this.level / 10)
+    this.damage *= (1 + this.level/10)
+    this.life = 50 + this.level * 8
+    this.cooldown = THREE.Math.clamp(this.cooldown - this.level * 3, 25)
     //console.log("The unit has reached level " + this.level)
 
     this.owner.resources -= this.nextUpgradeCost
@@ -163,6 +163,8 @@ Unit.prototype.upgrade = function() {
     if (this.uniform.unitLevel) {
         this.uniform.unitLevel.value = this.level
     }
+    // console.log("Unit Upgraded : level:" + this.level + ", speed:" + this.speed +
+    //             ",damage:" + this.damage + ",life:" + this.life + ",cooldown:" + this.cooldown)
 }
 
 Unit.prototype.canUpgrade = function() {
@@ -186,12 +188,20 @@ Unit.prototype.calcUpgradeCost = function() {
 
 Unit.prototype.runPlayerAI = function() {
     if (GameUtils.isCPU(this)) {
-        // For now, the only difference with the human driven player is to find automatically a new sector to conquer.
+        // Find continuosly a new sector to conquer
         if (this.targetSector == null) {
             // find the nearest sector
             this.targetSector = this.findNearestSector()
         }
+        // If there are enough resources i'm going to upgrade.
+        if (this.canUpgrade()) {
+            var r = this.owner.resources;
+            if (r > this.nextUpgradeCost * 3) {
+                this.upgrade()
+            }
+        }
     }
+
 }
 
 Unit.prototype.refreshCooldown = function() {

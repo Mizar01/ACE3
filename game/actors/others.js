@@ -34,7 +34,7 @@ Shot.prototype.run = function() {
 
 Shot.prototype.damageTarget = function() {
     var d = this.damage
-    var dinc = + 2
+    var dinc = d * 0.5
     var t1 = this.ownerType
     var t2 = this.target.getType()
     if (t1 == t2) {
@@ -42,7 +42,7 @@ Shot.prototype.damageTarget = function() {
     }else if ((t1 == "Rock" && t2 == "Paper") ||
         (t1 == "Paper" && t2 == "Scissors") ||
         (t1 == "Scissors" && t2 == "Rock")) {
-        dinc = - 2
+        dinc = - dinc
     }
     this.target.getDamage(this.damage + dinc)
     // this.target.life -= (this.damage + dinc)       

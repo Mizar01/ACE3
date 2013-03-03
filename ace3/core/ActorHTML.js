@@ -51,6 +51,9 @@ ACE3.ActorHTML.prototype.hide = function() {
 ACE3.ActorHTML.prototype.show = function() {
     $("#" + this.id).show()
 }
+ACE3.ActorHTML.prototype.remove = function() {
+    $("#" + this.id).remove()
+}
 ACE3.ActorHTML.prototype.addStyle = function(style) {
     var el = $("#" + this.id)
     if (el[0] != undefined) {

@@ -161,6 +161,13 @@ function game_init_map(map, demoMode) {
     gameManager.registerLogic(new ESCPauseGameLogic())
     gameManager.registerLogic(new HUDAndResourcesLogic())
 
+    //Adding eventual ai players logics 
+    for (var ip in players) {
+        if (players[ip].controller == ACE3.Constants.CONTROLLER_CPU) {
+            gameManager.registerLogic(new AIPlayerLogic(players[ip]))
+        }
+    }
+
 
     //TEST SKYBOX
     //var skyBox = new ACE3.SkyBox("media/sb1-")

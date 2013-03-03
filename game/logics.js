@@ -279,4 +279,30 @@ ShakeCameraLogic.prototype.deactivate = function() {
     // ace3.camera.pivot.position.x = this.originalPosition
 }
 
+/**
+* This implements the ai for cpu players. It manages the global action that the cpu player must take
+* in order to play and use resources. Single units have their own logic separated from that.
+*/
+AIPlayerLogic = function(player) {
+    ACE3.Logic.call(this)
+    this.player = player
+}
+AIPlayerLogic.extends(ACE3.Logic, "AIPlayerLogic")
+AIPlayerLogic.prototype.run = function() {
+    var r = this.player.resources;
+    var p = this.player;
+    // see if the player can launch a random tower neutralizer
+    if (p.canSatelliteShoot()) {
+        if (r > p.satelliteShotCost * 2) {
+            p.satelliteLaunch()
+        }
+    }else {
+        if (p.canIncreaseMaxUnits()) {
+            if (r > p.increaseMaxUnitsCost * 2) {
+                p.increaseMaxUnits()
+            }
+        }
+    }
+}
+
 

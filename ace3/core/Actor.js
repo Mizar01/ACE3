@@ -32,6 +32,7 @@ ACE3.Actor.prototype = {
     */
     remove: function() { 
         //implement it in an extending class 
+        // console.log("Warning: Called a non implemented remove for " + this.getId())
     },
 
     setForRemoval: function() {

@@ -23,7 +23,7 @@ ACE3.DisplayValue = function(label, defaultValue, vec2pos) {
        /*width: this.width + "px",*/
        zIndex: 10,
        backgroundColor: "gold",
-       color: "white",
+       color: "black",
        borderRadius: "3px",
     }
 

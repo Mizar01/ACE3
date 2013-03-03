@@ -6,7 +6,7 @@ function define_player_HUD() {
 	displayInfo.separator = ""
 
 
-	var upgradeButton = new DefaultGameButton("UP", ace3.getFromRatio(15, 2),
+	var upgradeButton = new DefaultGameButton("UP", ace3.getFromRatio(18, 2),
 		                        new THREE.Vector2(25, 25), null)
 	upgradeButton.currentUnit = null
 	upgradeButton.displayInfo = displayInfo
@@ -47,7 +47,7 @@ function define_player_HUD() {
 			this.currentUnit.upgrade()
 	}
 
-	var satelliteShotButton = new DefaultGameButton("SS", ace3.getFromRatio(25, 2),
+	var satelliteShotButton = new DefaultGameButton("SS", ace3.getFromRatio(21, 2),
 		                        new THREE.Vector2(25, 25), null)
 	satelliteShotButton.displayInfo = displayInfo
 	satelliteShotButton.initLoopLogic = function() {
@@ -79,7 +79,7 @@ function define_player_HUD() {
 	}
 
 
-	var increaseMaxUnits = new DefaultGameButton("+1", ace3.getFromRatio(35, 2),
+	var increaseMaxUnits = new DefaultGameButton("+1", ace3.getFromRatio(24, 2),
 		                        new THREE.Vector2(25, 25), null)
 	increaseMaxUnits.displayInfo = displayInfo
 	increaseMaxUnits.getInfoMessage = function() {
@@ -97,15 +97,16 @@ function define_player_HUD() {
 	}
 
     // human player resource info
-    var t1res = new ACE3.DisplayValue("<img src='media/particle.png' style='vertical-align: middle;'/>",
+    var resourceInfo = new ACE3.DisplayValue("<img src='media/particle.png' style='vertical-align: middle;'/>",
                                          0, ace3.getFromRatio(10, 2))
-    t1res.separator = ""
-    t1res.baseCss.backgroundColor = "transparent"
-    t1res.valueFunction = function() {return humanPlayer.resources}
+    resourceInfo.separator = ""
+    resourceInfo.baseCss.backgroundColor = "transparent"
+    resourceInfo.baseCss.color = "white"
+    resourceInfo.valueFunction = function() {return humanPlayer.resources}
     
 	hudManager = new ACE3.PureHTMLActorManager()
 	hudManager.registerActor(displayInfo)
-    hudManager.registerActor(t1res)
+    hudManager.registerActor(resourceInfo)
 	hudManager.registerActor(upgradeButton)
 	hudManager.registerActor(satelliteShotButton)
 	hudManager.registerActor(increaseMaxUnits)
