@@ -273,7 +273,7 @@ Spawner = function(sizex, sizey) {
     };
     var m = new THREE.ShaderMaterial( {
         uniforms: this.uniform,
-        vertexShader: ACE3.Utils.getShader('vertexShaderGeneric'),
+        vertexShader: ACE3.Utils.getShader('generic'),
         fragmentShader: ACE3.Utils.getShader('fragmentShaderSpawner'),
     });
     m.transparent = true

@@ -12,7 +12,13 @@ ACE3.Utils = {
      *
      */
     getShader: function(id) {
-        return $("#"+id).text();
+        var sc = $("#"+id);
+        if (sc.length > 0) {
+            return sc.text();
+        }else {
+            return ACE3.VertexShaders[id];
+        }
+
     },
     /**
     * Given a color in hex, returns a vec3 array with rgb values betwenn 0.0 and 1.0
@@ -42,5 +48,21 @@ ACE3.Utils = {
             fragmentShader: ACE3.Utils.getShader(fragmentShader),
         });
         return new THREE.Mesh(geometry, m) 
+    },
+    /**
+    * Given a 256 value rgb vector, convert it to an hexadecimal number
+    */
+    rgb2hex: function(r, g, b) {
+        var  hs = Math.floor(r).toString(16);
+        hs = hs.length == 1 ? "0" + hs : hs;
+        var rs = hs;
+        var  hs = Math.floor(g).toString(16);
+        hs = hs.length == 1 ? "0" + hs : hs;
+        var gs = hs;
+        var  hs = Math.floor(b).toString(16);
+        hs = hs.length == 1 ? "0" + hs : hs;
+        var bs = hs;
+        hs = "0x" + rs + gs + bs;
+        return parseInt(hs);
     },
 }

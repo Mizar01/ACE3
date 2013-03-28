@@ -70,14 +70,14 @@ ACE3.PickManager.prototype = {
         if (intersectedObj != undefined && intersectedObj.object != undefined) {
             if (this.pickedActor != undefined) {
                 this.pickedActor.picked = false //unsetting the preceding selected object
-                this.pickedActor = null
             }
             this.pickedActor = this.actors["" + intersectedObj.object.id]
             this.pickedActor.picked = true
             this.intersectedObj = intersectedObj
 
         } else {
-            
+            this.pickedActor = null
+            this.intersectedObj = null
         }
     },
     
