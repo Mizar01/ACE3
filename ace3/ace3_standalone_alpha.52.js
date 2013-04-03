@@ -53,24 +53,7 @@ if (!window.requestAnimationFrame) {
 
 var _ace3 = null
 
-__ace3_physics_load_scene = function() {
-    var scene = new Physijs.Scene;
-    scene.addEventListener(
-            'update',
-            function() {
-                _ace3.scene.simulate( undefined, 1 );
-            }
-    );
-    return scene;
-}
-
-__ace3_physics_start = function(ace3scene) {
-    ace3scene.simulate();
-}
-
-ACE3 = function(physicsEnabled) {
-
-    this.physicsEnabled = physicsEnabled || false;
+ACE3 = function() {
     
     if (_ace3 != undefined) {
         throw "ERROR! Sorry. You can't create two instances of ACE3"
@@ -108,11 +91,7 @@ ACE3 = function(physicsEnabled) {
     
     this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight)
     this.container.appendChild(this.renderer.domElement)
-    if (this.physicsEnabled) {
-        this.scene = __ace3_physics_load_scene();
-    }else {
-        this.scene = new THREE.Scene();
-    }
+    this.scene = new Physijs.Scene;
     
     this.camera = new ACE3.Camera(this.container)
     this.camera.pivot.position.set(0, 0, 10)
@@ -152,10 +131,6 @@ ACE3 = function(physicsEnabled) {
         _ace3.screen.x = e.clientX
         _ace3.screen.y = e.clientY
     });
-
-    if (this.physicsEnabled) {
-        __ace3_physics_start(this.scene);
-    }
 
 }
 
@@ -241,7 +216,7 @@ ACE3.prototype = {
         var vector = new THREE.Vector3( x, y, 1 )
         this.projector.unprojectVector( vector, this.camera.cameraObj )
         var cp = this.camera.cameraObj.matrixWorld.getPosition().clone()
-        var ray = new THREE.Ray( cp, vector.sub( cp ).normalize() )
+        var ray = new THREE.Ray( cp, vector.subSelf( cp ).normalize() )
         var intersects = ray.intersectObjects( this.pickManager.pickables )
         return intersects[0]
     },
@@ -1368,7 +1343,7 @@ ACE3.StellarSky.prototype.reset = function(vec3Pos) {
 		p.copy(new THREE.Vector3(0, 0, 0))
 		var radius = this.radius + THREE.Math.randInt(0, this.radius/8)
 		var mult = ACE3.Math.randVector3(1).normalize().multiplyScalar(radius);
-		p.add(mult)
+		p.addSelf(mult)
 	}
 	this.origin.copy(vec3Pos)
 	this.refresh()
@@ -1422,7 +1397,7 @@ ACE3.Explosion.prototype.run = function() {
 	var o = this.origin
 	for (var pi = 0; pi < this.particleCount; pi++) {
 		var p = this.obj.geometry.vertices[pi]
-		p.add(p.direction)
+		p.addSelf(p.direction)
 	}
 	this.refresh()
 	this.duration -= ace3.time.frameDelta

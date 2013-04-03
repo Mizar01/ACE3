@@ -35,7 +35,7 @@ ACE3.Explosion.prototype.run = function() {
 	var o = this.origin
 	for (var pi = 0; pi < this.particleCount; pi++) {
 		var p = this.obj.geometry.vertices[pi]
-		p.addSelf(p.direction)
+		p.add(p.direction)
 	}
 	this.refresh()
 	this.duration -= ace3.time.frameDelta

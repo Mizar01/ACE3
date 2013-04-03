@@ -2,6 +2,9 @@
 ACE3.PickManager = function() {
     this.pickables = new Array() //DON'T REMOVE: It's useful during picking process. Array of three js objects
     this.actors = {} //Associative array (three "id" obj -> actor)
+                     //If you redefine setPickable for an actor to use any THREE.Object as pickable and different
+                     //from the standard obj id of the actor , probably this works. So the
+                     //array this.actors does not have to be exactly id -> actor, but (id of some object) -> actor. 
     this.pickedActor = null // store the Actor currently over the mouse
     this.intersectedObj = null
 }
@@ -17,26 +20,26 @@ ACE3.PickManager.prototype = {
     type: "ACE3.PickManager", 
 
     addActor: function(actor) {
-        this.pickables.push(actor.obj)
-        this.actors["" + actor.obj.id] = actor
-        // THE REST IS FOR LOGGING PURPOSES 
-        // if (actor.typeIn(['Rock', 'Paper', 'Scissors'])) {
-        //         console.log("Added player " + actor.owner.name +" type " + actor.getType() +" id " + actor.getId())
-        //     var s = ""
-        //     for (var i = 0 ; i< this.pickables.length; i++) {
-        //         s += this.pickables[i].id + " "
-        //     }
-        //     console.log(s)
-        // }
+        var obj = actor.obj;
+        if (actor.pickMaster != null) {
+            obj = actor.pickMaster;
+        }
+        this.pickables.push(obj);
+        this.actors["" + obj.id] = actor;
     },
+    
     removeActor: function(actor) {
+        var idToFind = actor.obj.id;
+        if (actor.pickMaster != null) {
+            idToFind = actor.pickMaster.id;
+        }
         for (var pi in this.pickables) {
-            if (this.pickables[pi].id == actor.obj.id) {
+            if (this.pickables[pi].id == idToFind) {
                 this.pickables.splice(pi, 1)
                 break
             }
         }
-        delete this.actors["" + actor.obj.id]
+        delete this.actors["" + idToFind]
         // THE REST IS FOR LOGGING PURPOSES
         // if (actor.typeIn(['Rock', 'Paper', 'Scissors'])) {
         //     console.log("Removed player " + actor.owner.name +" type " + actor.getType() +" id " + actor.getId())

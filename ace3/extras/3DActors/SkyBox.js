@@ -10,7 +10,7 @@ ACE3.SkyBox = function(texturePrefix, extension) {
 			     texturePrefix + "posz." + ext, texturePrefix + "negz." + ext ];
 	var textureCube = THREE.ImageUtils.loadTextureCube( urls );
 	textureCube.format = THREE.RGBFormat;
-	var shader = THREE.ShaderUtils.lib["cube"];
+	var shader = THREE.ShaderLib["cube"];
 	var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
 	uniforms['tCube'].value = textureCube; // textureCube has been init before
 	var material = new THREE.ShaderMaterial({

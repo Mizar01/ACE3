@@ -241,7 +241,7 @@ ACE3.prototype = {
         var vector = new THREE.Vector3( x, y, 1 )
         this.projector.unprojectVector( vector, this.camera.cameraObj )
         var cp = this.camera.cameraObj.matrixWorld.getPosition().clone()
-        var ray = new THREE.Ray( cp, vector.sub( cp ).normalize() )
+        var ray = new THREE.Raycaster( cp, vector.sub( cp ).normalize() )
         var intersects = ray.intersectObjects( this.pickManager.pickables )
         return intersects[0]
     },

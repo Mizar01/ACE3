@@ -1,24 +1,24 @@
-awk 'FNR==1{print ""}1' ace3.js > ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' core/Actor.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' core/Actor3D.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' core/ActorHTML.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' core/Camera.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' core/Logic.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' managers/TimeManager.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' managers/ActorManager.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' managers/EventManager.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' managers/PickManager.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' managers/PureHTMLActorManager.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' tools/Utils.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' tools/Math.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' tools/Builder.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' extras/3DActors/SkyBox.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' extras/3DActors/ParticleActor.js >> ace3_standalone_alpha.js 
-awk 'FNR==1{print ""}1' extras/3DActors/StellarSky.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' extras/3DActors/Explosion.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' extras/3DActors/Ascension.js >> ace3_standalone_alpha.js   
-awk 'FNR==1{print ""}1' extras/HTMLActors/HTMLButton.js >> ace3_standalone_alpha.js  
-awk 'FNR==1{print ""}1' extras/HTMLActors/DefaultGameButton.js >> ace3_standalone_alpha.js          
-awk 'FNR==1{print ""}1' extras/HTMLActors/HTMLBox.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' extras/HTMLActors/DisplayValue.js >> ace3_standalone_alpha.js
-awk 'FNR==1{print ""}1' shaders/VertexShaders.js >> ace3_standalone_alpha.js
+awk 'FNR==1{print ""}1' ace3.js
+awk 'FNR==1{print ""}1' core/Actor.js
+awk 'FNR==1{print ""}1' core/Actor3D.js
+awk 'FNR==1{print ""}1' core/ActorHTML.js
+awk 'FNR==1{print ""}1' core/Camera.js
+awk 'FNR==1{print ""}1' core/Logic.js
+awk 'FNR==1{print ""}1' managers/TimeManager.js
+awk 'FNR==1{print ""}1' managers/ActorManager.js
+awk 'FNR==1{print ""}1' managers/EventManager.js
+awk 'FNR==1{print ""}1' managers/PickManager.js
+awk 'FNR==1{print ""}1' managers/PureHTMLActorManager.js
+awk 'FNR==1{print ""}1' tools/Utils.js
+awk 'FNR==1{print ""}1' tools/Math.js
+awk 'FNR==1{print ""}1' tools/Builder.js
+awk 'FNR==1{print ""}1' extras/3DActors/SkyBox.js
+awk 'FNR==1{print ""}1' extras/3DActors/ParticleActor.js 
+awk 'FNR==1{print ""}1' extras/3DActors/StellarSky.js
+awk 'FNR==1{print ""}1' extras/3DActors/Explosion.js
+awk 'FNR==1{print ""}1' extras/3DActors/Ascension.js   
+awk 'FNR==1{print ""}1' extras/HTMLActors/HTMLButton.js  
+awk 'FNR==1{print ""}1' extras/HTMLActors/DefaultGameButton.js          
+awk 'FNR==1{print ""}1' extras/HTMLActors/HTMLBox.js
+awk 'FNR==1{print ""}1' extras/HTMLActors/DisplayValue.js
+awk 'FNR==1{print ""}1' shaders/VertexShaders.js

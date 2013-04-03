@@ -27,7 +27,7 @@ ACE3.StellarSky.prototype.reset = function(vec3Pos) {
 		p.copy(new THREE.Vector3(0, 0, 0))
 		var radius = this.radius + THREE.Math.randInt(0, this.radius/8)
 		var mult = ACE3.Math.randVector3(1).normalize().multiplyScalar(radius);
-		p.addSelf(mult)
+		p.add(mult)
 	}
 	this.origin.copy(vec3Pos)
 	this.refresh()

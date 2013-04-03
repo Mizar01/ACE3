@@ -3,6 +3,13 @@ ACE3.Actor3D = function() {
     this.obj = null
     this.picked = false
     this.pickable = false // true if the object has been added to pickable objects.
+    /**
+    In most cases the association to pick is the id of this.obj, but
+    in other cases you may want to specify a specific three object representing
+    the association between the picking system and the actor (for example one of 
+    the children of this.obj). You can do that by setting the property of actor3d pickMaster
+    **/
+    this.pickMaster = null; // when null this.obj will be used by pickmanager.
 }
 ACE3.Actor3D.extends(ACE3.Actor, "ACE3.Actor3D")
 

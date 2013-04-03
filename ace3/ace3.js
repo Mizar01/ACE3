@@ -52,7 +52,24 @@ if (!window.requestAnimationFrame) {
 
 var _ace3 = null
 
-ACE3 = function() {
+__ace3_physics_load_scene = function() {
+    var scene = new Physijs.Scene;
+    scene.addEventListener(
+            'update',
+            function() {
+                _ace3.scene.simulate( undefined, 1 );
+            }
+    );
+    return scene;
+}
+
+__ace3_physics_start = function(ace3scene) {
+    ace3scene.simulate();
+}
+
+ACE3 = function(physicsEnabled) {
+
+    this.physicsEnabled = physicsEnabled || false;
     
     if (_ace3 != undefined) {
         throw "ERROR! Sorry. You can't create two instances of ACE3"
@@ -90,7 +107,11 @@ ACE3 = function() {
     
     this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight)
     this.container.appendChild(this.renderer.domElement)
-    this.scene = new THREE.Scene()
+    if (this.physicsEnabled) {
+        this.scene = __ace3_physics_load_scene();
+    }else {
+        this.scene = new THREE.Scene();
+    }
     
     this.camera = new ACE3.Camera(this.container)
     this.camera.pivot.position.set(0, 0, 10)
@@ -130,6 +151,10 @@ ACE3 = function() {
         _ace3.screen.x = e.clientX
         _ace3.screen.y = e.clientY
     });
+
+    if (this.physicsEnabled) {
+        __ace3_physics_start(this.scene);
+    }
 
 }
 
@@ -215,7 +240,7 @@ ACE3.prototype = {
         var vector = new THREE.Vector3( x, y, 1 )
         this.projector.unprojectVector( vector, this.camera.cameraObj )
         var cp = this.camera.cameraObj.matrixWorld.getPosition().clone()
-        var ray = new THREE.Ray( cp, vector.subSelf( cp ).normalize() )
+        var ray = new THREE.Raycaster( cp, vector.sub( cp ).normalize() )
         var intersects = ray.intersectObjects( this.pickManager.pickables )
         return intersects[0]
     },
