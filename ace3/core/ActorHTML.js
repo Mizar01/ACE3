@@ -83,6 +83,9 @@ ACE3.ActorHTML.prototype.buildContent = function() {
 
 /**
 * Some jquery shortcuts
+* 
+* Beware that those methods are ineffective when the actor is not yet initialized.
+* If you need something different before adding to DOM use baseCss and baseClass instead
 */
 ACE3.ActorHTML.prototype.css = function(name, value) {
     $("#" + this.id).css(name, value)
