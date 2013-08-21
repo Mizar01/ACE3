@@ -36,5 +36,5 @@ ACE3.HTMLButton.prototype.buildContent = function() {
 
 ACE3.HTMLButton.prototype.changeLabel = function(newLabel) {
     this.label = newLabel
-    $("#" + this.id).text(this.label)
+    $("#" + this.id).html(this.label)
 }
