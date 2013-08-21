@@ -33,3 +33,8 @@ ACE3.HTMLButton.prototype.buildContent = function() {
     // console.log(s)
     return s 
 }
+
+ACE3.HTMLButton.prototype.changeLabel = function(newLabel) {
+    this.label = newLabel
+    $("#" + this.id).text(this.label)
+}
