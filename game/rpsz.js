@@ -34,7 +34,7 @@ var optimizer = null // optimizer is a memory used throughout the entire game to
 
 
 function game_init() {
-    ace3 = new ACE3()
+    ace3 = new ACE3(false)
     ace3.setBGColor(0x000000)
     ace3.addPostProcessing("dots")
     //ace3.setFog(0.02)

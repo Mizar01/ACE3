@@ -233,6 +233,7 @@ ACE3.prototype = {
      */
     pick: function() {
         mp = this.getViewportMousePosition()
+        console.log(mp)
         var x = mp.x
         var y = mp.y
         //var realCam = new THREE.Object3D()
@@ -241,6 +242,7 @@ ACE3.prototype = {
         var vector = new THREE.Vector3( x, y, 1 )
         this.projector.unprojectVector( vector, this.camera.cameraObj )
         var cp = this.camera.cameraObj.matrixWorld.getPosition().clone()
+        console.log(cp)
         var ray = new THREE.Ray( cp, vector.sub( cp ).normalize() )
         var intersects = ray.intersectObjects( this.pickManager.pickables )
         return intersects[0]

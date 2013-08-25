@@ -53,7 +53,9 @@ if (!window.requestAnimationFrame) {
 
 var _ace3 = null
 
-ACE3 = function() {
+ACE3 = function(physicsEnabled) {
+
+    this.physicsEnabled = physicsEnabled || false;
     
     if (_ace3 != undefined) {
         throw "ERROR! Sorry. You can't create two instances of ACE3"
@@ -91,7 +93,11 @@ ACE3 = function() {
     
     this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight)
     this.container.appendChild(this.renderer.domElement)
-    this.scene = new Physijs.Scene;
+    if (this.physicsEnabled) {
+        this.scene = __ace3_physics_load_scene();
+    }else {
+        this.scene = new THREE.Scene();
+    }
     
     this.camera = new ACE3.Camera(this.container)
     this.camera.pivot.position.set(0, 0, 10)
@@ -131,6 +137,10 @@ ACE3 = function() {
         _ace3.screen.x = e.clientX
         _ace3.screen.y = e.clientY
     });
+
+    if (this.physicsEnabled) {
+        __ace3_physics_start(this.scene);
+    }
 
 }
 
