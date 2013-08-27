@@ -19,22 +19,9 @@
       <script src="ace3/ace3_standalone_final.52.js"></script>
       <link rel="stylesheet" type="text/css" href="ace3/ace3.css" />
 
-      <script src="game/actors/selectors.js"></script>
-      <script src="game/actors/sectors.js"></script>
-      <script src="game/actors/units.js"></script>
-      <script src="game/actors/others.js"></script>
-      <script src="game/actors/buttons.js"></script>
-      <script src="game/actors/Unit2.js"></script>
-      <script src="game/logics.js"></script>
-      <script src="game/objects.js"></script>   
-      <script src="game/maps.js"></script>   
-      <script src="game/rpsz.js"></script>
-      <link href='http://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
-      <link href='game/style.css' rel='stylesheet' type='text/css'>
+      <!--<script src="demo.js"></script>-->
       <script>
       	$(document).ready(function() {
-   		    game_init()
-		      game_run()
 		    });
       </script>
       <script id="fragmentShader2" type="x-shader/x-fragment">
@@ -476,78 +463,7 @@
 
 </head>
 <body>
-      <div id="shaders_container" style="display:none;">
-            <div id="simple_vertexShader">
-                  /**
-                    * Multiply each vertex by the
-                    * model-view matrix and the
-                    * projection matrix (both provided
-                    * by Three.js) to get a final
-                    * vertex position
-                    */
-                   void main() {
-                     gl_Position = projectionMatrix *
-                                   modelViewMatrix *
-                                   vec4(position,1.0);
-                   }
-            </div>
-            <div id="simple_fragmentShader">
-                  /**
-                    * Set the colour to a lovely pink.
-                    * Note that the color is a 4D Float
-                    * Vector, R,G,B and A and each part
-                    * runs from 0.0 to 1.0
-                    */
-                   void main() {
-                     gl_FragColor = vec4(1.0,  // R
-                                       0.0,  // G
-                                       1.0,  // B
-                                       1.0); // A
-                   }
-            </div>
-            <div id="test2_vertexShader">
-                  uniform float amplitude;
-                  attribute float displacement;
-                  varying vec3 vNormal;
-                  void main() {
-                    vNormal = normal;
-                    vec3 newPosition = position + normal * vec3(displacement * amplitude);
-                  
-                    gl_Position = projectionMatrix *
-                                  modelViewMatrix *
-                                  vec4(newPosition, 1.0);
-                  } 
-            </div>
-            <div id="test2_fragmentShader">
-                  // same name and type as VS
-                  varying vec3 vNormal;
-                  
-                  void main() {
-                  
-                    // calc the dot product and clamp
-                    // 0 -> 1 rather than -1 -> 1
-                    vec3 light = vec3(0.5,0.2,1.0);
-                  
-                    // ensure it's normalized
-                    light = normalize(light);
-                  
-                    // calculate the dot product of
-                    // the light to the vertex normal
-                    float dProd = max(0.0, dot(vNormal, light));
-                  
-                    // feed into our frag colour
-                    gl_FragColor = vec4(dProd, // R
-                                        dProd, // G
-                                        dProd, // B
-                                        1.0);  // A
-                  
-                  }                  
-            </div>
-            
-      </div> 
-      <audio id='main_theme'>
-        <!--<source src='media/up1.mp3' type="audio/mpeg"/>
-        Your Browser does not support HTML 5 Audio Element
-      </audio>
+      DEMO PAGE OF ACE3 (TODO)
+      <a href="https://github.com/Miza01/ACE3"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 </body>
 </html>
