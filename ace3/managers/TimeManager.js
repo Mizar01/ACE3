@@ -1,7 +1,7 @@
 /**
 * This is a wrapper for the Clock and it stores the elapsed time between frames.
 * Actually it can't be used as a contextual timer (so the time is always going on for
-* every Actor/Manager, even if they are paused)
+* every Actor/Manager, even if they are paused) - Use the ACE3.CooldownTimer instead
 */
 
 ACE3.TimeManager = function() {
@@ -20,7 +20,52 @@ ACE3.TimeManager.prototype.run = function() {
 }
 
 
-// TODO : create a new special object called ACE3.Timer used for contextual management of 
-// managers. All the actors must read the relative time from their manager, or in other
-// ways this can be implemented in every single Actor, so we are completely free to handle 
-// the time even for actor children.
+
+/**
+* The CooldownTimer is used as local timer for an Actor/Entity. 
+* It must be called everytime it's needed through trigger() method.
+* The method returns if the time has reached 0 and it can restart
+* automatically if needed (default is restart = false) 
+*/
+
+ACE3.CooldownTimer = function(cooldownTime, autoRestart) {
+    this.maxTime = cooldownTime
+    this.time = cooldownTime
+    this.autoRestart = autoRestart || false
+    this.stopped = false
+}
+
+/* 
+* If the timer is stopped the trigger is always true.
+*/
+ACE3.CooldownTimer.prototype.trigger = function() {
+    if (this.stopped) {
+        return true
+    }
+    this.time -= _ace3.time.frameDelta
+    if (this.time <= 0) {
+        if (this.autoRestart) {
+            // TRIGGER AND RESET COOLDOWN
+            this.time = this.maxTime
+        }else {
+            this.stopped = true
+        }
+        return true
+    }else {
+        return false
+    }
+}
+
+ACE3.CooldownTimer.prototype.restart = function(newTime, autoRestart) {
+    this.maxTime = newTime || this.maxTime
+    this.time = newTime || this.maxTime
+    this.autoRestart = autoRestart || this.autoRestart
+    this.stopped = false
+}
+
+ACE3.Actor3D.prototype.getWorldCoords = function() {
+    var wc = new THREE.Vector3(0, 0, 0)
+    return this.obj.localToWorld(wc)
+}
+
+
