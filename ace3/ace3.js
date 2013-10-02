@@ -52,12 +52,21 @@ if (!window.requestAnimationFrame) {
 
 var _ace3 = null
 
+/**
+ * Physijs scene is completely dependent from the status of 
+ * defaultActorManager. So it's configured to stop and resume entire physics 
+ * effects with stop and play of ace3.defaultActorManager
+*/
 __ace3_physics_load_scene = function() {
     var scene = new Physijs.Scene;
     scene.addEventListener(
             'update',
             function() {
-                _ace3.scene.simulate( undefined, 1 );
+                //Excluding the call to simulate() will stop 
+                //completely any other update event. 
+                if (!_ace3.defaultActorManager.paused) {
+                    _ace3.scene.simulate( undefined, 1 );
+                }
             }
     );
     return scene;
@@ -65,6 +74,10 @@ __ace3_physics_load_scene = function() {
 
 __ace3_physics_start = function(ace3scene) {
     ace3scene.simulate();
+}
+__ace3_physics_resume = function() {
+    //Restart of physics simulation with a timestep of 1 fps
+    _ace3.scene.simulate(0.0167, 1)
 }
 
 ACE3 = function(physicsEnabled, swidth, sheight) {
@@ -118,7 +131,18 @@ ACE3 = function(physicsEnabled, swidth, sheight) {
     this.camera.pivot.position.set(0, 0, 10)
     this.scene.add(this.camera.pivot)
     
+    //The defaultActorManager is entirely associated with the scene.
+    //NOTE : if the defaultActorManager pauses, also the physics in the entire scene are paused.
+    //This beahaviour is not always desired. Feel free to change the 'update' listener for the scene
+    // (see the __ace3_physics_load_scene method)
     this.defaultActorManager = new ACE3.ActorManager(this.scene)
+    // Override the default behaviour
+    this.defaultActorManager.play = function () {
+        this.paused = false
+        if (_ace3.physicsEnabled) {
+            __ace3_physics_resume()
+        }
+    }
     
     this.actorManagerSet = []
     this.actorManagerSet.push(this.defaultActorManager)
