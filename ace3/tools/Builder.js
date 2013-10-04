@@ -40,6 +40,15 @@ ACE3.Builder = {
         var s = new THREE.Mesh(g, new THREE.MeshBasicMaterial({'color':color}))
         return s        
     },
+    // NOTE : in windows the linewidth doesn't work (see the three js documentation)
+    line: function(vec3orig, vec3dest, color, linewidth) {
+        var g = new THREE.Geometry();
+        g.vertices.push(vec3orig);
+        g.vertices.push(vec3dest);
+        var m = new THREE.LineBasicMaterial({color: color, linewidth : linewidth});
+        var s = new THREE.Line(g, m)
+        return s  
+    },
     shaderCube: function() {
         var g = new THREE.SphereGeometry(1, 16, 12)
         var attributes = {
