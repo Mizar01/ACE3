@@ -29,12 +29,12 @@ ACE3.Builder = {
         var s = new THREE.Mesh(g, new THREE.MeshBasicMaterial({'color':color}))
         return s
     },
-    cylinder: function(radius, height, color) {
-        var g = new THREE.CylinderGeometry(radius, radius, height)
+    cylinder: function(radius, height, color, radius2) {
+        radius2 = radius2 || radius
+        var g = new THREE.CylinderGeometry(radius, radius2, height)
         var s = new THREE.Mesh(g, new THREE.MeshBasicMaterial({'color':color}))
         return s
     },
-
     sphere: function(radius, color) {
         var g = new THREE.SphereGeometry(radius)
         var s = new THREE.Mesh(g, new THREE.MeshBasicMaterial({'color':color}))
