@@ -12,6 +12,7 @@ awk 'FNR==1{print ""}1' managers/PureHTMLActorManager.js
 awk 'FNR==1{print ""}1' tools/Utils.js
 awk 'FNR==1{print ""}1' tools/Math.js
 awk 'FNR==1{print ""}1' tools/Builder.js
+awk 'FNR==1{print ""}1' tests/TestUtils.js
 awk 'FNR==1{print ""}1' extras/3DActors/SkyBox.js
 awk 'FNR==1{print ""}1' extras/3DActors/ParticleActor.js 
 awk 'FNR==1{print ""}1' extras/3DActors/StellarSky.js
@@ -22,3 +23,4 @@ awk 'FNR==1{print ""}1' extras/HTMLActors/DefaultGameButton.js
 awk 'FNR==1{print ""}1' extras/HTMLActors/HTMLBox.js
 awk 'FNR==1{print ""}1' extras/HTMLActors/DisplayValue.js
 awk 'FNR==1{print ""}1' shaders/VertexShaders.js
+
