@@ -45,9 +45,36 @@ ACE3.Actor3D.prototype.setPickable = function() {
 ACE3.Actor3D.prototype.addToScene = function () {
     _ace3.scene.add(this.obj)
 }
+
+//ACE3.Actor3D.prototype.removeFromScene = function () {
+//    _ace3.scene.remove(this.obj)
+//}
+
+/**
+* removes from the scene or the direct parent
+*/
 ACE3.Actor3D.prototype.removeFromScene = function () {
-    _ace3.scene.remove(this.obj)
+    var parent = this.obj.parent
+    parent.remove(this.obj)
 }
+
+/**
+* Default beahaviour for removeSelf()
+* The remove() method should be called by manager
+* You can overwrite this method.
+* NOTE: Replaces the Actor.remove method.
+*/
+ACE3.Actor3D.prototype.removeSelf = function() {
+
+    this.removeFromScene()
+    this.alive = false
+    if (this.pickable) {
+        _ace3.pickManager.removeActor(this)
+    }
+    
+}
+
+
 
 ACE3.Actor3D.prototype.addActor = function(actor) {
     //Nothing is more wrong than this. 
@@ -98,6 +125,14 @@ ACE3.Actor3D.prototype.hide = function() {
 
 ACE3.Actor3D.prototype.show = function() {
     this.obj.visible = true
+}
+
+ACE3.Actor3D.prototype.getYaw = function(vec3Target) {
+    return ACE3.Math.getXZAngle(this.getWorldCoords(), vec3Target)
+}
+
+ACE3.Actor3D.prototype.getPitch = function(vec3Target) {
+    return ACE3.Math.getPitchAngle(this.getWorldCoords(), vec3Target)
 }
 
     

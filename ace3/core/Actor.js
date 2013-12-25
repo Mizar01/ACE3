@@ -34,6 +34,17 @@ ACE3.Actor.prototype = {
         //implement it in an extending class 
         // console.log("Warning: Called a non implemented remove for " + this.getId())
     },
+    
+    /**
+    * Default beahaviour for removeSelf()
+    * The remove() method should be called by manager
+    * You can overwrite this method.
+    * NOTE: Replaces the Actor.remove method.
+    */
+    removeSelf: function() {
+        //implement it in an extending class 
+        // console.log("Warning: Called a non implemented remove for " + this.getId())    
+    },
 
     setForRemoval: function() {
         this.alive = false
@@ -44,17 +55,34 @@ ACE3.Actor.prototype = {
     * called by the manager. This force every actor to have a basic behaviour 
     * stated once and for all. Furthermore implementing run function will not
     * need this logic, so the developer can concentrate on the single actor logic.
+    *
+    * Improved version of __run managing dead children
     */
     __run: function() {
         if (this.alive) {
             this.run()
             for (id in this.actorChildren) {
-                this.actorChildren[id].__run()
+                var c = this.actorChildren[id]
+                if (c.alive) {
+                    this.actorChildren[id].__run()
+                }else {
+                    this.removeActor(c)
+                }
             }
         }      
+    },    
+    /**
+    * Non extendable static function
+    **/
+    isAlive: function(actor) {
+        return actor != null && actor.alive 
     },
     
-
+    /**
+     * run() should be implemented by inheriting objects and should manage only
+     * the logic for the single actor. Every children can have its own run method.
+     * The logic to managing children is already done in the basic __run() method.
+     */
     run: function() {
 
     },  
@@ -68,13 +96,15 @@ ACE3.Actor.prototype = {
     },
 
     /**
+    * New version of removeActor
     * Note : no object is really destroyed during this operation. The child is only detached
     * and is lost every reference inside this actor. But any other reference outside will keep 
     * the child object alive in memory.
-    */
+    */ 
     removeActor: function(actor) {
+        actor.removeSelf()
         actor.parentActor = null
-        delete this.actorChildren["" + actor.getId()]  // DON'T USE SPLICE, we are not using iterative counts.
+        delete this.actorChildren["" + actor.getId()]
     },
 
     /**
@@ -108,7 +138,7 @@ ACE3.Actor.prototype = {
         }
         return false
     },
-
+    
     /**
     * Finds the manager in the tree of this actor. The actor in facts can be a children
     * of some other actor.
@@ -122,4 +152,5 @@ ACE3.Actor.prototype = {
         }
         return this.manager
     },
+    
 }
