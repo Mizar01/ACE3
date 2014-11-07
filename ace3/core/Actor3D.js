@@ -135,4 +135,9 @@ ACE3.Actor3D.prototype.getPitch = function(vec3Target) {
     return ACE3.Math.getPitchAngle(this.getWorldCoords(), vec3Target)
 }
 
+ACE3.Actor3D.prototype.getWorldCoords = function() {
+    var wc = new THREE.Vector3(0, 0, 0)
+    return this.obj.localToWorld(wc)
+}
+
     
