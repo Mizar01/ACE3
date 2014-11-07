@@ -63,9 +63,4 @@ ACE3.CooldownTimer.prototype.restart = function(newTime, autoRestart) {
     this.stopped = false
 }
 
-ACE3.Actor3D.prototype.getWorldCoords = function() {
-    var wc = new THREE.Vector3(0, 0, 0)
-    return this.obj.localToWorld(wc)
-}
-
 
